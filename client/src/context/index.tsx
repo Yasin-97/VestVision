@@ -15,14 +15,17 @@ export type CampaignType = {
   title: string;
   description: string;
   target: string | BigNumber;
-  deadline: string;
+  deadline: string | BigNumber;
   image: string;
+  amountCollected?: string;
+  owner?: string;
 };
 type contextType = {
   address?: string;
   connect: any;
   contract: any;
   createCampaign: (campaign: CampaignType) => Promise<void>;
+  getCampaigns: () => void;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -32,6 +35,9 @@ const StateContext = createContext<contextType>({
   contract: null,
   createCampaign: async () => {
     throw new Error("createCampaign function not implemented");
+  },
+  getCampaigns: async () => {
+    throw new Error("getCampaign function not implemented");
   },
 });
 export const StateContextProvider = ({
@@ -57,7 +63,7 @@ export const StateContextProvider = ({
           campaign.title,
           campaign.description,
           campaign.target,
-          new Date(campaign.deadline).getTime(),
+          new Date(campaign.deadline as string).getTime(),
           campaign.image,
         ],
       });
@@ -67,9 +73,34 @@ export const StateContextProvider = ({
     }
   };
 
+  const getCampaigns = async () => {
+    const campaigns: CampaignType[] = await contract?.call("getCampaigns");
+
+    const parsedCampaings = campaigns.map((campaign, i) => ({
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      target: ethers.utils.formatEther(campaign.target.toString()),
+      deadline: (campaign.deadline as BigNumber).toNumber(),
+      amountCollected: ethers.utils.formatEther(
+        (campaign.amountCollected as string).toString()
+      ),
+      image: campaign.image,
+      pId: i,
+    }));
+
+    return parsedCampaings;
+  };
+
   return (
     <StateContext.Provider
-      value={{ address, connect, contract, createCampaign: publishCampaign }}
+      value={{
+        address,
+        connect,
+        contract,
+        getCampaigns,
+        createCampaign: publishCampaign,
+      }}
     >
       {children}
     </StateContext.Provider>
