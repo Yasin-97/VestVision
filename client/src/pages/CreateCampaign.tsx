@@ -1,31 +1,53 @@
-import React, { useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  FormEventHandler,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
-import { money } from "../assets";
+import { createCampaign, money } from "../assets";
 import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
-
+import { CampaignType, useStateContext } from "../context";
+type formDataType = CampaignType & { name: string };
 const CreateCampaign = () => {
+  const { createCampaign } = useStateContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<formDataType>({
     name: "",
     title: "",
     description: "",
-    target: "",
+    target: "0.5",
     deadline: "",
     image: "",
   });
 
-  const handleFormFieldChange = (fieldName, e) => {
+  const handleFormFieldChange = (
+    fieldName: string,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
     setForm({ ...form, [fieldName]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    return true;
+    checkIfImage(form.image, async (exists) => {
+      if (exists) {
+        setIsLoading(true);
+        await createCampaign({
+          ...form,
+          target: ethers.utils.parseUnits(form.target as string, 18),
+        });
+        setIsLoading(false);
+        navigate("/");
+      } else {
+        alert("provide valid image URL");
+        setForm({ ...form, image: "" });
+      }
+    });
   };
 
   return (
@@ -47,14 +69,18 @@ const CreateCampaign = () => {
             placeholder="John Doe"
             inputType="text"
             value={form.name}
-            handleChange={(e) => handleFormFieldChange("name", e)}
+            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFormFieldChange("name", e)
+            }
           />
           <FormField
             labelName="Campaign Title *"
             placeholder="Write a title"
             inputType="text"
             value={form.title}
-            handleChange={(e) => handleFormFieldChange("title", e)}
+            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFormFieldChange("title", e)
+            }
           />
         </div>
 
@@ -63,7 +89,9 @@ const CreateCampaign = () => {
           placeholder="Write your story"
           isTextArea
           value={form.description}
-          handleChange={(e) => handleFormFieldChange("description", e)}
+          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleFormFieldChange("description", e)
+          }
         />
 
         <div className="w-full flex justify-start items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]">
@@ -83,14 +111,18 @@ const CreateCampaign = () => {
             placeholder="ETH 0.50"
             inputType="text"
             value={form.target}
-            handleChange={(e) => handleFormFieldChange("target", e)}
+            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFormFieldChange("target", e)
+            }
           />
           <FormField
             labelName="End Date *"
             placeholder="End Date"
             inputType="date"
             value={form.deadline}
-            handleChange={(e) => handleFormFieldChange("deadline", e)}
+            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFormFieldChange("deadline", e)
+            }
           />
         </div>
 
@@ -99,7 +131,9 @@ const CreateCampaign = () => {
           placeholder="Place image URL of your campaign"
           inputType="url"
           value={form.image}
-          handleChange={(e) => handleFormFieldChange("image", e)}
+          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleFormFieldChange("image", e)
+          }
         />
 
         <div className="flex justify-center items-center mt-[40px]">

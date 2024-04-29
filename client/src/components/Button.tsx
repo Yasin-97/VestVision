@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from "react";
 type ButtonType = {
   btnType?: "submit" | "reset" | "button";
   title: string;
-  handleClick: () => void;
+  handleClick?: () => void;
   styles: string;
 };
 
