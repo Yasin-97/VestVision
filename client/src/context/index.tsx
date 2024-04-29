@@ -1,17 +1,42 @@
-import { useContext, createContext } from "react";
+import { useContext, createContext, ReactNode } from "react";
 
 import {
   useAddress,
   useContract,
   useMetamask,
   useContractWrite,
+  MetaMaskWallet,
 } from "@thirdweb-dev/react";
 
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
-const StateContext = createContext({});
+export type CampaignType = {
+  address?: string;
+  title: string;
+  description: string;
+  target: string | BigNumber;
+  deadline: string;
+  image: string;
+};
+type contextType = {
+  address?: string;
+  connect: any;
+  contract: any;
+  createCampaign: (campaign: CampaignType) => Promise<void>;
+};
+type StateContextProviderType = { children: ReactNode };
 
-export const StateContextProvider = ({ children }) => {
+const StateContext = createContext<contextType>({
+  address: "",
+  connect: null,
+  contract: null,
+  createCampaign: async () => {
+    throw new Error("createCampaign function not implemented");
+  },
+});
+export const StateContextProvider = ({
+  children,
+}: StateContextProviderType) => {
   const { contract } = useContract(
     "0x60863289eff3cea553db1b72cf133ba9f5a6c451"
   );
@@ -24,15 +49,7 @@ export const StateContextProvider = ({ children }) => {
   const address = useAddress();
   const connect = useMetamask();
 
-  type PublishCampaignType = {
-    address: string;
-    title: string;
-    description: string;
-    target: string;
-    deadline: string;
-    image: string;
-  };
-  const publishCampaign = async (campaign: PublishCampaignType) => {
+  const publishCampaign = async (campaign: CampaignType) => {
     try {
       const data = await createCampaign({
         args: [
@@ -40,7 +57,7 @@ export const StateContextProvider = ({ children }) => {
           campaign.title,
           campaign.description,
           campaign.target,
-          campaign.deadline,
+          new Date(campaign.deadline).getTime(),
           campaign.image,
         ],
       });
@@ -52,7 +69,7 @@ export const StateContextProvider = ({ children }) => {
 
   return (
     <StateContext.Provider
-      value={{ address, contract, createCampaign: publishCampaign }}
+      value={{ address, connect, contract, createCampaign: publishCampaign }}
     >
       {children}
     </StateContext.Provider>
