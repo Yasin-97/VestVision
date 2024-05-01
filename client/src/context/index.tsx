@@ -15,17 +15,18 @@ export type CampaignType = {
   title: string;
   description: string;
   target: string | BigNumber;
-  deadline: string | BigNumber;
+  deadline: string | BigNumber | number;
   image: string;
   amountCollected?: string;
   owner?: string;
 };
+
 type contextType = {
   address?: string;
   connect: any;
   contract: any;
   createCampaign: (campaign: CampaignType) => Promise<void>;
-  getCampaigns: () => void;
+  getUserCampaigns: () => Promise<CampaignType[]>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -36,8 +37,8 @@ const StateContext = createContext<contextType>({
   createCampaign: async () => {
     throw new Error("createCampaign function not implemented");
   },
-  getCampaigns: async () => {
-    throw new Error("getCampaign function not implemented");
+  getUserCampaigns: async () => {
+    throw new Error("getUserCampaigns function not implemented");
   },
 });
 export const StateContextProvider = ({
@@ -92,6 +93,15 @@ export const StateContextProvider = ({
     return parsedCampaings;
   };
 
+  const getUserCampaigns = async () => {
+    const allCampaigns = await getCampaigns();
+    const filteredCampaigns = allCampaigns.filter(
+      (campaign) => campaign.owner === address
+    );
+
+    return filteredCampaigns;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -99,6 +109,7 @@ export const StateContextProvider = ({
         connect,
         contract,
         getCampaigns,
+        getUserCampaigns,
         createCampaign: publishCampaign,
       }}
     >
