@@ -27,6 +27,11 @@ type contextType = {
   contract: any;
   createCampaign: (campaign: CampaignType) => Promise<void>;
   getUserCampaigns: () => Promise<CampaignType[]>;
+  getCampaigns: () => Promise<CampaignType[]>;
+  donate: (pId: string, amount: string) => Promise<CampaignType>;
+  getDonations: (
+    pId: string
+  ) => Promise<{ donator: number; donation: string }[]>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -39,6 +44,15 @@ const StateContext = createContext<contextType>({
   },
   getUserCampaigns: async () => {
     throw new Error("getUserCampaigns function not implemented");
+  },
+  getCampaigns: async () => {
+    throw new Error("getCampaign function not implemented");
+  },
+  donate: async (pId, amount) => {
+    throw new Error("donate function not implemented");
+  },
+  getDonations: async (pId) => {
+    throw new Error("getDonations function not implemented");
   },
 });
 export const StateContextProvider = ({
@@ -93,6 +107,30 @@ export const StateContextProvider = ({
     return parsedCampaings;
   };
 
+  const donate = async (pId: string, amount: string) => {
+    const data = await contract?.call("donateToCampaign", [pId], {
+      value: ethers.utils.parseEther(amount),
+    });
+
+    return data;
+  };
+
+  const getDonations = async (pId: string) => {
+    const donations = await contract?.call("getDonators", [pId]);
+    const numberOfDonations = donations[0].length;
+
+    const parsedDonations: { donator: number; donation: string }[] = [];
+
+    for (let i = 0; i < numberOfDonations; i++) {
+      parsedDonations.push({
+        donator: [0][i],
+        donation: ethers.utils.formatEther(donations[1][i].toString()),
+      });
+    }
+
+    return parsedDonations;
+  };
+
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
     const filteredCampaigns = allCampaigns.filter(
@@ -106,9 +144,11 @@ export const StateContextProvider = ({
     <StateContext.Provider
       value={{
         address,
+        donate,
         connect,
         contract,
         getCampaigns,
+        getDonations,
         getUserCampaigns,
         createCampaign: publishCampaign,
       }}
