@@ -23,3 +23,6 @@ export const checkIfImage = (
   img.onload = () => callback(true);
   img.onerror = () => callback(false);
 };
+
+export const shortenAddress = (address: string) =>
+  `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
