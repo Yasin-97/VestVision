@@ -1,0 +1,46 @@
+import React from "react";
+import { shortenAddress } from "../utils";
+
+export type SingleCommentProps = {
+  dir: string;
+  firstColor: string;
+  secondColor: string;
+  isDonator: boolean;
+  address: string;
+  comment: string;
+};
+
+const SingleComment = ({
+  dir,
+  firstColor,
+  secondColor,
+  isDonator,
+  address,
+  comment,
+}: SingleCommentProps) => {
+  return (
+    <div className="p-4 bg-[#13131a] rounded-[10px] space-y-4">
+      <div className="flex flex-col border border-b-2 last:border-none">
+        <div className="flex items-center gap-2">
+          <div
+            style={{
+              background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
+            }}
+            className="h-8 w-8 rounded-full"
+          />
+          <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-[#808191]">
+            {shortenAddress(address)}{" "}
+            {isDonator && (
+              <span className="text-[11px] text-[#4acd8d]">(donator)</span>
+            )}
+          </h4>
+        </div>
+        <p className="mt-[20px] font-epilogue font-normal text-[14px] leading-[22px] text-[#808191]">
+          {comment}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default SingleComment;
