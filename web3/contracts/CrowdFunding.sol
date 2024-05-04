@@ -2,6 +2,11 @@
 pragma solidity ^0.8.9;
 
 contract CrowdFunding {
+    struct Comment {
+        address owner;
+        string text;
+    }
+
     struct Campaign {
         address owner;
         string title;
@@ -12,9 +17,11 @@ contract CrowdFunding {
         string image;
         address[] donators;
         uint256[] donations;
+        uint256 totalComments;
     }
 
     mapping(uint256 => Campaign) public campaigns;
+    mapping(uint256 => mapping(uint256 => Comment)) public campaignComments;
 
     uint256 public numberOfCampaigns = 0;
 
@@ -46,6 +53,17 @@ contract CrowdFunding {
         return numberOfCampaigns - 1;
     }
 
+    function addComment(
+        uint256 _id,
+        string memory _text
+    ) public returns (Comment memory) {
+        Comment memory newComment = Comment({owner: msg.sender, text: _text});
+        campaignComments[_id][campaigns[_id].totalComments] = newComment;
+        campaigns[_id].totalComments++;
+
+        return newComment;
+    }
+
     function donateToCampaign(uint256 _id) public payable {
         uint256 amount = msg.value;
 
@@ -65,6 +83,21 @@ contract CrowdFunding {
         uint256 _id
     ) public view returns (address[] memory, uint256[] memory) {
         return (campaigns[_id].donators, campaigns[_id].donations);
+    }
+
+    function getAllComments(
+        uint256 _id
+    ) public view returns (Comment[] memory) {
+        Comment[] memory commentsArray = new Comment[](
+            campaigns[_id].totalComments
+        );
+
+        for (uint256 i = 0; i < campaigns[_id].totalComments; i++) {
+            Comment storage comment = campaignComments[_id][i];
+            commentsArray[i] = comment;
+        }
+
+        return (commentsArray);
     }
 
     function getCampaign() public view returns (Campaign[] memory) {
