@@ -9,6 +9,7 @@ import {
 } from "@thirdweb-dev/react";
 
 import { BigNumber, ethers } from "ethers";
+import { avatarColor } from "../utils";
 
 export type CampaignType = {
   address?: string;
@@ -32,6 +33,8 @@ type contextType = {
   getDonations: (
     pId: string
   ) => Promise<{ donator: number; donation: string }[]>;
+  addComment: (pId: number, text: string) => Promise<void>;
+  getComments: (pId: number) => Promise<{ owner: string; text: string }[]>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -54,12 +57,18 @@ const StateContext = createContext<contextType>({
   getDonations: async (pId) => {
     throw new Error("getDonations function not implemented");
   },
+  addComment: async (pId, text) => {
+    throw new Error("addComment function not implemented");
+  },
+  getComments: async (pId) => {
+    throw new Error("getComments function not implemented");
+  },
 });
 export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
   const { contract } = useContract(
-    "0x60863289eff3cea553db1b72cf133ba9f5a6c451"
+    "0x3a3b32c99e42B3c8888385894131af82a389A4f3"
   );
 
   const { mutateAsync: createCampaign } = useContractWrite(
@@ -88,8 +97,20 @@ export const StateContextProvider = ({
     }
   };
 
+  const addComment = async (pId: number, text: string) => {
+    try {
+      console.log("runing");
+      const data = await contract?.call("addComment", [pId, text]);
+
+      console.log("contract call success", data);
+      return data;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
   const getCampaigns = async () => {
-    const campaigns: CampaignType[] = await contract?.call("getCampaigns");
+    const campaigns: CampaignType[] = await contract?.call("getCampaign");
 
     const parsedCampaings = campaigns.map((campaign, i) => ({
       owner: campaign.owner,
@@ -105,6 +126,26 @@ export const StateContextProvider = ({
     }));
 
     return parsedCampaings;
+  };
+
+  const getComments = async (pId: number) => {
+    const allComments: { owner: string; text: string }[] = await contract?.call(
+      "getAllComments",
+      [pId]
+    );
+    const cleanComments = allComments.map((item) => {
+      const { firstColor, secondColor, dir } = avatarColor();
+
+      return {
+        firstColor,
+        secondColor,
+        dir,
+        owner: item.owner,
+        text: item.text,
+      };
+    });
+
+    return cleanComments;
   };
 
   const donate = async (pId: string, amount: string) => {
@@ -123,7 +164,7 @@ export const StateContextProvider = ({
 
     for (let i = 0; i < numberOfDonations; i++) {
       parsedDonations.push({
-        donator: [0][i],
+        donator: donations[0][i],
         donation: ethers.utils.formatEther(donations[1][i].toString()),
       });
     }
@@ -148,6 +189,8 @@ export const StateContextProvider = ({
         connect,
         contract,
         getCampaigns,
+        addComment,
+        getComments,
         getDonations,
         getUserCampaigns,
         createCampaign: publishCampaign,
