@@ -2,12 +2,12 @@ import { BigNumber } from "ethers";
 import { ChangeEvent, ChangeEventHandler } from "react";
 
 type FormFieldType = {
-  labelName: string;
-  className: string;
-  textAreaRow: number;
   placeholder: string;
-  value?: string | BigNumber;
   handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  labelName?: string;
+  className?: string;
+  textAreaRow?: number;
+  value?: string | BigNumber;
   inputType?: string;
   isTextArea?: boolean;
 };
