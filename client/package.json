@@ -11,6 +11,7 @@
   "dependencies": {
     "@thirdweb-dev/react": "^3.16.5",
     "@thirdweb-dev/sdk": "^3",
+    "canvas-confetti": "^1.9.3",
     "ethers": "^5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -19,6 +20,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
     "@types/react": "^18.3.1",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react": "^2",
