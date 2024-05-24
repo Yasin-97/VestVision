@@ -5,7 +5,6 @@ import {
   useContract,
   useMetamask,
   useContractWrite,
-  MetaMaskWallet,
 } from "@thirdweb-dev/react";
 
 import { BigNumber, ethers } from "ethers";
@@ -22,19 +21,45 @@ export type CampaignType = {
   owner?: string;
 };
 
+export type CampaignTokenType = {
+  campaignId?: number;
+  name: string;
+  symbol: string;
+  initialSupply: number;
+  campaignOwnerShare: number;
+  teamAddress: string;
+  teamShare: number;
+  advisorAddress: string;
+  advisorShare: number;
+  reserveAddress: string;
+  reserveShare: number;
+  publicShare?: number;
+};
+
+export type CommentType = {
+  owner: string;
+  text: string;
+  isInvestor: boolean;
+  firstColor: string;
+  secondColor: string;
+  dir: string;
+};
+
 type contextType = {
   address?: string;
   connect: any;
   contract: any;
   createCampaign: (campaign: CampaignType) => Promise<void>;
+  createTokenForCampaign: (campaignToken: CampaignTokenType) => Promise<void>;
   getUserCampaigns: () => Promise<CampaignType[]>;
+  getCampaignTokenData: (pId: number) => Promise<CampaignTokenType | undefined>;
   getCampaigns: () => Promise<CampaignType[]>;
-  donate: (pId: string, amount: string) => Promise<CampaignType>;
-  getDonations: (
-    pId: string
-  ) => Promise<{ donator: number; donation: string }[]>;
+  invest: (pId: number, amount: string) => Promise<CampaignType>;
+  getInvesments: (
+    pId: number
+  ) => Promise<{ investor: string; investment: string }[]>;
   addComment: (pId: number, text: string) => Promise<void>;
-  getComments: (pId: number) => Promise<{ owner: string; text: string }[]>;
+  getComments: (pId: number) => Promise<CommentType[]>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -45,17 +70,23 @@ const StateContext = createContext<contextType>({
   createCampaign: async () => {
     throw new Error("createCampaign function not implemented");
   },
+  createTokenForCampaign: async () => {
+    throw new Error("createTokenForCampaign function not implemented");
+  },
   getUserCampaigns: async () => {
     throw new Error("getUserCampaigns function not implemented");
+  },
+  getCampaignTokenData: async () => {
+    throw new Error("getCampaignTokenData function not implemented");
   },
   getCampaigns: async () => {
     throw new Error("getCampaign function not implemented");
   },
-  donate: async (pId, amount) => {
-    throw new Error("donate function not implemented");
+  invest: async (pId, amount) => {
+    throw new Error("invest function not implemented");
   },
-  getDonations: async (pId) => {
-    throw new Error("getDonations function not implemented");
+  getInvesments: async (pId) => {
+    throw new Error("getInvesments function not implemented");
   },
   addComment: async (pId, text) => {
     throw new Error("addComment function not implemented");
@@ -68,12 +99,16 @@ export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
   const { contract } = useContract(
-    "0x3a3b32c99e42B3c8888385894131af82a389A4f3"
+    "0x3e3e95cA2eBF6cDf24565A31020B5c87aEe996B1"
   );
 
   const { mutateAsync: createCampaign } = useContractWrite(
     contract,
     "createCampaign"
+  );
+  const { mutateAsync: createTokenForCampaign } = useContractWrite(
+    contract,
+    "createTokenForCampaign"
   );
 
   const address = useAddress();
@@ -97,11 +132,32 @@ export const StateContextProvider = ({
     }
   };
 
+  const mintTokenForCampaign = async (campaignToken: CampaignTokenType) => {
+    try {
+      const data = await createTokenForCampaign({
+        args: [
+          campaignToken.campaignId,
+          campaignToken.name,
+          campaignToken.symbol,
+          campaignToken.initialSupply,
+          campaignToken.campaignOwnerShare,
+          campaignToken.teamAddress,
+          campaignToken.teamShare,
+          campaignToken.advisorAddress,
+          campaignToken.advisorShare,
+          campaignToken.reserveAddress,
+          campaignToken.reserveShare,
+        ],
+      });
+      console.log("contract call success", data);
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
   const addComment = async (pId: number, text: string) => {
     try {
-      console.log("runing");
       const data = await contract?.call("addComment", [pId, text]);
-
       console.log("contract call success", data);
       return data;
     } catch (error) {
@@ -110,7 +166,7 @@ export const StateContextProvider = ({
   };
 
   const getCampaigns = async () => {
-    const campaigns: CampaignType[] = await contract?.call("getCampaign");
+    const campaigns: CampaignType[] = await contract?.call("getCampaigns");
 
     const parsedCampaings = campaigns.map((campaign, i) => ({
       owner: campaign.owner,
@@ -133,10 +189,17 @@ export const StateContextProvider = ({
       "getAllComments",
       [pId]
     );
+    const allinvestments = await getInvesments(pId);
+
     const cleanComments = allComments.map((item) => {
       const { firstColor, secondColor, dir } = avatarColor();
 
+      const isInvestor = allinvestments.find(
+        (investment) => investment.investor === item.owner
+      );
+
       return {
+        isInvestor: !!isInvestor,
         firstColor,
         secondColor,
         dir,
@@ -148,28 +211,53 @@ export const StateContextProvider = ({
     return cleanComments;
   };
 
-  const donate = async (pId: string, amount: string) => {
-    const data = await contract?.call("donateToCampaign", [pId], {
+  const invest = async (pId: number, amount: string) => {
+    const data = await contract?.call("investInCampaign", [pId], {
       value: ethers.utils.parseEther(amount),
     });
 
     return data;
   };
 
-  const getDonations = async (pId: string) => {
-    const donations = await contract?.call("getDonators", [pId]);
-    const numberOfDonations = donations[0].length;
+  const getInvesments = async (pId: number) => {
+    const investments = await contract?.call("getInvestors", [pId]);
+    const numberOfInvestments = investments[0].length;
 
-    const parsedDonations: { donator: number; donation: string }[] = [];
+    const parsedInvestments: { investor: string; investment: string }[] = [];
 
-    for (let i = 0; i < numberOfDonations; i++) {
-      parsedDonations.push({
-        donator: donations[0][i],
-        donation: ethers.utils.formatEther(donations[1][i].toString()),
+    for (let i = 0; i < numberOfInvestments; i++) {
+      parsedInvestments.push({
+        investor: investments[0][i],
+        investment: ethers.utils.formatEther(investments[1][i].toString()),
       });
     }
 
-    return parsedDonations;
+    return parsedInvestments;
+  };
+
+  const getCampaignTokenData = async (pId: number) => {
+    try {
+      const rawTokenData = await contract?.call("getCampaignTokenData", [pId]);
+
+      const parsedTokenData: CampaignTokenType = {
+        name: rawTokenData?.name,
+        symbol: rawTokenData?.symbol,
+        initialSupply: parseInt(rawTokenData?.initialSupply._hex, 16),
+        campaignOwnerShare: parseInt(rawTokenData?.campaignOwnerShare._hex, 16),
+        teamAddress: rawTokenData?.teamAddress,
+        teamShare: parseInt(rawTokenData?.teamShare._hex, 16),
+        advisorAddress: rawTokenData?.advisorAddress,
+        advisorShare: parseInt(rawTokenData?.advisorShare._hex, 16),
+        reserveAddress: rawTokenData?.reserveAddress,
+        reserveShare: parseInt(rawTokenData?.reserveShare._hex, 16),
+      };
+
+      return parsedTokenData;
+    } catch (error) {
+      if (error.message.includes("call revert exception")) {
+        throw new Error("This campaign does not have its own token!");
+      }
+    }
   };
 
   const getUserCampaigns = async () => {
@@ -184,16 +272,18 @@ export const StateContextProvider = ({
   return (
     <StateContext.Provider
       value={{
-        address,
-        donate,
+        invest,
         connect,
+        address,
         contract,
-        getCampaigns,
         addComment,
         getComments,
-        getDonations,
+        getCampaigns,
+        getInvesments,
         getUserCampaigns,
+        getCampaignTokenData,
         createCampaign: publishCampaign,
+        createTokenForCampaign: mintTokenForCampaign,
       }}
     >
       {children}

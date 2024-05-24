@@ -2,7 +2,13 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { Sidebar, Navbar } from "./components";
-import { CampaignDetails, CreateCampaign, Home, Profile } from "./pages";
+import {
+  CampaignDetails,
+  CreateCampaign,
+  CreateToken,
+  Home,
+  Profile,
+} from "./pages";
 
 const App = () => {
   return (
@@ -18,6 +24,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-campaign" element={<CreateCampaign />} />
+          <Route path="/create-token/:campaignId" element={<CreateToken />} />
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
         </Routes>
       </div>

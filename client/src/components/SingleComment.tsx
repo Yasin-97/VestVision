@@ -5,7 +5,7 @@ export type SingleCommentProps = {
   dir: string;
   firstColor: string;
   secondColor: string;
-  isDonator: boolean;
+  isInvestor: boolean;
   address: string;
   comment: string;
 };
@@ -14,7 +14,7 @@ const SingleComment = ({
   dir,
   firstColor,
   secondColor,
-  isDonator,
+  isInvestor,
   address,
   comment,
 }: SingleCommentProps) => {
@@ -30,8 +30,8 @@ const SingleComment = ({
           />
           <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-[#808191]">
             {shortenAddress(address)}{" "}
-            {isDonator && (
-              <span className="text-[9px] text-[#4acd8d]">(donator)</span>
+            {isInvestor && (
+              <span className="text-[9px] text-[#4acd8d]">(Investor)</span>
             )}
           </h4>
         </div>
