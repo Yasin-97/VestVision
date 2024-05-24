@@ -7,9 +7,10 @@ type FormFieldType = {
   labelName?: string;
   className?: string;
   textAreaRow?: number;
-  value?: string | BigNumber;
+  value?: any;
   inputType?: string;
   isTextArea?: boolean;
+  isLoading?: boolean;
 };
 const FormField = ({
   labelName,
@@ -20,6 +21,7 @@ const FormField = ({
   isTextArea,
   value,
   handleChange,
+  isLoading,
 }: FormFieldType) => {
   return (
     <label className="flex-1 w-full flex flex-col">
@@ -30,6 +32,8 @@ const FormField = ({
       )}
       {isTextArea ? (
         <textarea
+          disabled={isLoading}
+          spellCheck
           required
           value={value}
           onChange={handleChange}
@@ -39,6 +43,8 @@ const FormField = ({
         />
       ) : (
         <input
+          disabled={isLoading}
+          spellCheck
           required
           value={value}
           onChange={handleChange}
