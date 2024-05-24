@@ -2,8 +2,7 @@ import FormField from "./FormField";
 import Button from "./Button";
 import { BsFileEarmarkSpreadsheet } from "react-icons/bs";
 import { SingleComment } from "../components";
-import { SingleCommentProps } from "./singleComment";
-import { useStateContext } from "../context";
+import { CommentType, useStateContext } from "../context";
 import { useEffect, useState } from "react";
 import { loader } from "../assets";
 
@@ -11,39 +10,43 @@ type CommentsType = {
   campaignId: number;
 };
 
-type campaignCommentsType = {
-  owner: string;
-  text: string;
-  firstColor: string;
-  secondColor: string;
-  dir: string;
-}[];
-
 const Comments = ({ campaignId }: CommentsType) => {
-  const { getComments, addComment } = useStateContext();
+  const { getComments, addComment, contract, address } = useStateContext();
 
-  const [campaignComments, setCampaignComments] =
-    useState<campaignCommentsType>([]);
+  const [campaignComments, setCampaignComments] = useState<CommentType[]>([]);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isFetchCommentsLoading, setIsFetchCommentsLoading] = useState(false);
+  const [isAddCommentLoading, setIsAddCommentLoading] = useState(false);
 
   const [comment, setComment] = useState<string>("");
 
   const fetchComments = async () => {
     try {
-      setIsLoading(true);
+      setIsFetchCommentsLoading(true);
       const allComments = await getComments(campaignId);
 
       setCampaignComments(allComments);
-      setIsLoading(false);
+      setIsFetchCommentsLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // useEffect(() => {
+  useEffect(() => {
+    fetchComments();
+  }, [contract, address]);
 
-  // }, []);
+  const handleAddComment = async () => {
+    try {
+      setIsAddCommentLoading(true);
+      await addComment(campaignId, comment);
+      setComment("");
+      setIsAddCommentLoading(false);
+      fetchComments();
+    } catch (error) {
+      setIsAddCommentLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row items-start gap-5 mt-5 pb-20">
@@ -55,7 +58,7 @@ const Comments = ({ campaignId }: CommentsType) => {
           People's thought on it
         </p>
         <div className="flex flex-col gap-1 max-h-[500px] overflow-auto">
-          {!isLoading && !campaignComments.length && (
+          {!isFetchCommentsLoading && !campaignComments.length && (
             <div className="flex flex-col items-center h-[300px] justify-center ">
               <BsFileEarmarkSpreadsheet className="text-[#808191] text-4xl mb-6" />
               <p className=" mb-5 font-epilogue fount-medium text-[16px] leading-[30px] text-[#808191]">
@@ -63,7 +66,7 @@ const Comments = ({ campaignId }: CommentsType) => {
               </p>
             </div>
           )}
-          {isLoading && (
+          {isFetchCommentsLoading && (
             <img
               src={loader}
               alt="loader"
@@ -71,12 +74,12 @@ const Comments = ({ campaignId }: CommentsType) => {
             />
           )}
 
-          {!isLoading &&
+          {!isFetchCommentsLoading &&
             campaignComments &&
             campaignComments.map(
-              ({ owner, text, firstColor, secondColor, dir }) => (
+              ({ owner, text, firstColor, secondColor, dir, isInvestor }) => (
                 <SingleComment
-                  isDonator={true}
+                  isInvestor={isInvestor}
                   dir={dir}
                   firstColor={firstColor}
                   secondColor={secondColor}
@@ -89,11 +92,12 @@ const Comments = ({ campaignId }: CommentsType) => {
       </div>
 
       <div className="w-full flex-1 p-4 flex flex-col bg-[#1c1c24] rounded-[10px]">
-        <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
+        <p className="font-epilogue fount-medium text-[20px] leading-[30px] lg:text-center text-[#808191]">
           what do you think of it?
         </p>
         <div className="mt-[30px]">
           <FormField
+            isLoading={isAddCommentLoading}
             className="mb-5"
             textAreaRow={5}
             placeholder="Your thought"
@@ -103,10 +107,11 @@ const Comments = ({ campaignId }: CommentsType) => {
           />
 
           <Button
+            isLoading={isAddCommentLoading}
             btnType="button"
-            title="Fund Campaign"
-            styles="w-full bg-[#8c6dfd]"
-            handleClick={() => addComment(campaignId, comment)}
+            title="Add Comment"
+            styles="w-full text-white"
+            handleClick={handleAddComment}
           />
         </div>
       </div>
