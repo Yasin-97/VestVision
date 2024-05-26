@@ -56,3 +56,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 ::-webkit-scrollbar-thumb:hover {
   background: #67676bbf; /* color of the scroll thumb on hover */
 }
+
+.selector-options::-webkit-scrollbar {
+  display: none;
+}
+
+.selector-options {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

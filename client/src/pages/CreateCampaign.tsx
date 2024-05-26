@@ -7,16 +7,31 @@ import React, {
 import { useNavigate } from "react-router-dom";
 import { BigNumber, ethers } from "ethers";
 
-import { createCampaign, money } from "../assets";
+import { money } from "../assets";
 import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
 import { CampaignType, useStateContext } from "../context";
+import SelectorInput from "../components/SelectorInput";
 type formDataType = CampaignType & { name: string };
+
+const campaignCategories = [
+  { name: "AI" },
+  { name: "IoT" },
+  { name: "Edtech" },
+  { name: "Gaming" },
+  { name: "Fintech" },
+  { name: "VR & AR" },
+  { name: "AgriTech" },
+  { name: "Robotics" },
+  { name: "Blockchain" },
+  { name: "Transportation" },
+];
 const CreateCampaign = () => {
   const { createCampaign } = useStateContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState<formDataType>({
+    category: "",
     name: "",
     title: "",
     description: "",
@@ -37,12 +52,12 @@ const CreateCampaign = () => {
     checkIfImage(form.image, async (exists) => {
       if (exists) {
         setIsLoading(true);
-        await createCampaign({
+        const data = await createCampaign({
           ...form,
           target: ethers.utils.parseUnits(form.target as string, 18),
         });
         setIsLoading(false);
-        navigate("/");
+        navigate(`/create-token/`);
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });
@@ -63,6 +78,14 @@ const CreateCampaign = () => {
         onSubmit={handleSubmit}
         className="w-full mt-[65px] flex flex-col gap-[30px]"
       >
+        <SelectorInput
+          placeholderText="Select Campaign Category"
+          labelName="Category"
+          options={campaignCategories}
+          selectCallback={(selected) =>
+            setForm({ ...form, category: selected })
+          }
+        />
         <div className="flex flex-wrap gap-[40px]">
           <FormField
             labelName="Your Name *"
