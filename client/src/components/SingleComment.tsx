@@ -35,7 +35,7 @@ const SingleComment = ({
             )}
           </h4>
         </div>
-        <p className="mt-[20px] font-epilogue font-normal text-[14px] leading-[22px] text-[#808191]">
+        <p className="mt-[20px] font-epilogue font-semibold text-[14px] leading-[22px] text-white">
           {comment}
         </p>
       </div>

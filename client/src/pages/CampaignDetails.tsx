@@ -20,27 +20,46 @@ const { firstColor, secondColor, dir } = avatarColor();
 const CampaignDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { invest, getInvesments, getCampaignTokenData, contract, address } =
-    useStateContext();
+  const {
+    getNumberOfLikes,
+    invest,
+    getInvesments,
+    getCampaignTokenData,
+    contract,
+    address,
+    likeCampaign,
+  } = useStateContext();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    investment: false,
+    likeCount: true,
+    tokenData: true,
+    investors: true,
+  });
   const [amount, setAmount] = useState("");
   const [tokenData, setTokenData] = useState<CampaignTokenType>();
   const [investors, setInvestors] = useState<
     { investor: string; investment: string }[]
   >([]);
+  const [likesCount, setLikesCount] = useState<number>();
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const remainingDays = daysLeft(state?.deadline);
 
   const fetchInvestors = async () => {
+    setIsLoading({ ...isLoading, investors: true });
+
     const data = await getInvesments(state.pId);
+    setIsLoading({ ...isLoading, investors: false });
 
     setInvestors(data);
   };
 
   const fetchTokenData = async () => {
+    setIsLoading({ ...isLoading, tokenData: true });
+
     const data = await getCampaignTokenData(state.pId);
+
     if (data)
       setTokenData({
         ...data,
@@ -48,15 +67,42 @@ const CampaignDetails = () => {
           100 -
           (data.advisorShare +
             data.teamShare +
-            data.reserveShare +
+            data.earlyInvestorsShare +
             data.campaignOwnerShare),
       });
+
+    setIsLoading({ ...isLoading, tokenData: false });
+  };
+  const likeCampaignHandler = async () => {
+    await likeCampaign(state.pId);
+    await fetchLikesCount();
+  };
+
+  const fetchLikesCount = async () => {
+    try {
+      setIsLoading({ ...isLoading, likeCount: true });
+      const likesCount = await getNumberOfLikes(state.pId);
+      setIsLoading({ ...isLoading, likeCount: false });
+
+      setLikesCount(parseInt(likesCount));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     if (contract) {
       fetchTokenData();
+    }
+  }, [contract, address]);
+  useEffect(() => {
+    if (contract) {
       fetchInvestors();
+    }
+  }, [contract, address]);
+  useEffect(() => {
+    if (contract) {
+      fetchTokenData();
     }
   }, [contract, address]);
 
@@ -80,20 +126,20 @@ const CampaignDetails = () => {
   const handleInvestment = async () => {
     if (!address) return alert("Please connect your Metamask wallet.");
     try {
-      setIsLoading(true);
+      setIsLoading({ ...isLoading, investment: true });
 
       await invest(state.pId, amount);
 
       navigate("/");
-      setIsLoading(false);
+      setIsLoading({ ...isLoading, investment: false });
     } catch (error) {
-      setIsLoading(false);
+      setIsLoading({ ...isLoading, investment: false });
     }
   };
 
   return (
     <div>
-      {isLoading && <Loader />}
+      {isLoading.investment && <Loader />}
 
       <div className="w-full flex  flex-col mt-10 gap-8">
         <div className="w-full flex md:flex-row flex-col gap-8">
@@ -109,12 +155,15 @@ const CampaignDetails = () => {
             </div>
             <div className=" p-2 flex flex-col gap-1 items-center absolute bottom-5 right-2 bg-[#13131a] rounded-xl cursor-pointer">
               <BiSolidLike
-                onClick={handleConfetti}
+                onClick={(e) => {
+                  handleConfetti(e);
+                  likeCampaignHandler();
+                }}
                 className={`text-3xl text-white transition-all hover:text-green-400 ${
                   isLiked && "!text-green-400"
                 }`}
               />
-              <span className="text-white ">15</span>
+              <span className="text-white ">{likesCount || "-"}</span>
             </div>
             <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
               <div
@@ -132,13 +181,16 @@ const CampaignDetails = () => {
           <div className="flex md:w-[150px] w-full flex-wrap justify-center gap-8 ">
             <CountBox title="Days Left" value={remainingDays} />
             <CountBox
-              title={`Raised of ${state?.target}`}
+              title={`Raised of ${state?.target} `}
               value={state?.amountCollected}
             />
             <CountBox title="Total Backers" value={investors.length} />
           </div>
         </div>
-        <Tokenomic tokenData={tokenData as CampaignTokenType} />
+        <Tokenomic
+          isLoading={isLoading.tokenData}
+          tokenData={tokenData as CampaignTokenType}
+        />
       </div>
 
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">

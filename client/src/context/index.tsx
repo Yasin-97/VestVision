@@ -11,6 +11,7 @@ import { BigNumber, ethers } from "ethers";
 import { avatarColor } from "../utils";
 
 export type CampaignType = {
+  category: string;
   address?: string;
   title: string;
   description: string;
@@ -25,14 +26,14 @@ export type CampaignTokenType = {
   campaignId?: number;
   name: string;
   symbol: string;
-  initialSupply: number;
+  totalSupply: number;
   campaignOwnerShare: number;
   teamAddress: string;
   teamShare: number;
   advisorAddress: string;
   advisorShare: number;
-  reserveAddress: string;
-  reserveShare: number;
+  earlyInvestorsAddress: string;
+  earlyInvestorsShare: number;
   publicShare?: number;
 };
 
@@ -59,7 +60,9 @@ type contextType = {
     pId: number
   ) => Promise<{ investor: string; investment: string }[]>;
   addComment: (pId: number, text: string) => Promise<void>;
+  likeCampaign: (pId: number) => Promise<void>;
   getComments: (pId: number) => Promise<CommentType[]>;
+  getNumberOfLikes: (pId: number) => Promise<string>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -91,15 +94,21 @@ const StateContext = createContext<contextType>({
   addComment: async (pId, text) => {
     throw new Error("addComment function not implemented");
   },
+  likeCampaign: async (pId) => {
+    throw new Error("likeCampaign function not implemented");
+  },
   getComments: async (pId) => {
     throw new Error("getComments function not implemented");
+  },
+  getNumberOfLikes: async (pId) => {
+    throw new Error("getNumberOfLikes function not implemented");
   },
 });
 export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
   const { contract } = useContract(
-    "0x3e3e95cA2eBF6cDf24565A31020B5c87aEe996B1"
+    "0x3A98B7FFaBF592be494603328EEc6290e3b12cB5"
   );
 
   const { mutateAsync: createCampaign } = useContractWrite(
@@ -120,6 +129,7 @@ export const StateContextProvider = ({
         args: [
           address,
           campaign.title,
+          campaign.category,
           campaign.description,
           campaign.target,
           new Date(campaign.deadline as string).getTime(),
@@ -139,14 +149,14 @@ export const StateContextProvider = ({
           campaignToken.campaignId,
           campaignToken.name,
           campaignToken.symbol,
-          campaignToken.initialSupply,
+          campaignToken.totalSupply,
           campaignToken.campaignOwnerShare,
           campaignToken.teamAddress,
           campaignToken.teamShare,
           campaignToken.advisorAddress,
           campaignToken.advisorShare,
-          campaignToken.reserveAddress,
-          campaignToken.reserveShare,
+          campaignToken.earlyInvestorsAddress,
+          campaignToken.earlyInvestorsShare,
         ],
       });
       console.log("contract call success", data);
@@ -165,12 +175,24 @@ export const StateContextProvider = ({
     }
   };
 
+  const likeCampaign = async (pId: number) => {
+    try {
+      console.log("the campaign id", pId);
+
+      const data = await contract?.call("likeCampaign", [pId]);
+      console.log("contract call success", data);
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
   const getCampaigns = async () => {
     const campaigns: CampaignType[] = await contract?.call("getCampaigns");
 
     const parsedCampaings = campaigns.map((campaign, i) => ({
       owner: campaign.owner,
       title: campaign.title,
+      category: campaign.category,
       description: campaign.description,
       target: ethers.utils.formatEther(campaign.target.toString()),
       deadline: (campaign.deadline as BigNumber).toNumber(),
@@ -211,6 +233,11 @@ export const StateContextProvider = ({
     return cleanComments;
   };
 
+  const getNumberOfLikes = async (pId: number) => {
+    const likesCount = await contract?.call("getNumberOfLikes", [pId]);
+    return likesCount._hex;
+  };
+
   const invest = async (pId: number, amount: string) => {
     const data = await contract?.call("investInCampaign", [pId], {
       value: ethers.utils.parseEther(amount),
@@ -242,20 +269,23 @@ export const StateContextProvider = ({
       const parsedTokenData: CampaignTokenType = {
         name: rawTokenData?.name,
         symbol: rawTokenData?.symbol,
-        initialSupply: parseInt(rawTokenData?.initialSupply._hex, 16),
+        totalSupply: parseInt(rawTokenData?.totalSupply._hex, 16),
         campaignOwnerShare: parseInt(rawTokenData?.campaignOwnerShare._hex, 16),
         teamAddress: rawTokenData?.teamAddress,
         teamShare: parseInt(rawTokenData?.teamShare._hex, 16),
         advisorAddress: rawTokenData?.advisorAddress,
         advisorShare: parseInt(rawTokenData?.advisorShare._hex, 16),
-        reserveAddress: rawTokenData?.reserveAddress,
-        reserveShare: parseInt(rawTokenData?.reserveShare._hex, 16),
+        earlyInvestorsAddress: rawTokenData?.earlyInvestorsAddress,
+        earlyInvestorsShare: parseInt(
+          rawTokenData?.earlyInvestorsShare._hex,
+          16
+        ),
       };
 
       return parsedTokenData;
     } catch (error) {
       if (error.message.includes("call revert exception")) {
-        throw new Error("This campaign does not have its own token!");
+        console.log("This campaign does not have its own token!");
       }
     }
   };
@@ -279,8 +309,10 @@ export const StateContextProvider = ({
         addComment,
         getComments,
         getCampaigns,
+        likeCampaign,
         getInvesments,
         getUserCampaigns,
+        getNumberOfLikes,
         getCampaignTokenData,
         createCampaign: publishCampaign,
         createTokenForCampaign: mintTokenForCampaign,
