@@ -18,6 +18,7 @@ const Button = ({
 }: ButtonType) => {
   return (
     <button
+      disabled={isLoading}
       type={btnType}
       className={`flex justify-center items-center bg-[#8c6dfd] font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[52px] px-4 rounded-[10px] ${styles}`}
       onClick={handleClick}
