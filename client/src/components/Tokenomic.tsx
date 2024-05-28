@@ -29,60 +29,66 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
         )}
         {!isLoading && tokenData && (
           <>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  {tokenData?.name || "-"}
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.symbol || "-"}
-                </span>
+            <div className="w-full flex flex-wrap justify-between">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    {tokenData?.name || "-"}
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.symbol || "-"}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    Total Supply
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.totalSupply || "-"}
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  Total Supply
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.totalSupply || "-"}
-                </span>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    Owner Share
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.campaignOwnerShare || "-"} %
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    Team Share
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.teamShare || "-"} %
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    Advisor Share
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.advisorShare || "-"} %
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[#808191] text-[14px] leading-[22px] text-center">
+                    Early Investor share
+                  </span>
+                  <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
+                    {tokenData?.earlyInvestorsShare || "-"} %
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  Owner Share
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.campaignOwnerShare || "-"} %
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  Team Share
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.teamShare || "-"} %
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  Advisor Share
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.advisorShare || "-"} %
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[#808191] text-[14px] leading-[22px] text-center">
-                  Public
-                </span>
-                <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                  {tokenData?.publicShare || "-"} %
-                </span>
-              </div>
-            </div>
+
+            <p className="font-epilogue font-semibold text-[14px] leading-[22px] text-white mt-2">
+              The rest is Allocated to the public investors
+            </p>
           </>
         )}
       </div>
