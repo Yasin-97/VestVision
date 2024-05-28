@@ -41,7 +41,7 @@ const CampaignDetails = () => {
   const [investors, setInvestors] = useState<
     { investor: string; investment: string }[]
   >([]);
-  const [likesCount, setLikesCount] = useState<number>();
+  const [likesCount, setLikesCount] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const remainingDays = daysLeft(state?.deadline);
@@ -60,16 +60,7 @@ const CampaignDetails = () => {
 
     const data = await getCampaignTokenData(state.pId);
 
-    if (data)
-      setTokenData({
-        ...data,
-        publicShare:
-          100 -
-          (data.advisorShare +
-            data.teamShare +
-            data.earlyInvestorsShare +
-            data.campaignOwnerShare),
-      });
+    if (data) setTokenData(data);
 
     setIsLoading({ ...isLoading, tokenData: false });
   };
@@ -163,7 +154,7 @@ const CampaignDetails = () => {
                   isLiked && "!text-green-400"
                 }`}
               />
-              <span className="text-white ">{likesCount || "-"}</span>
+              <span className="text-white ">{likesCount}</span>
             </div>
             <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
               <div
