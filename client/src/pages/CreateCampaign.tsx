@@ -27,7 +27,7 @@ const campaignCategories = [
   { name: "Transportation" },
 ];
 const CreateCampaign = () => {
-  const { createCampaign } = useStateContext();
+  const { createCampaign, getCampaigns } = useStateContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState<formDataType>({
@@ -52,12 +52,13 @@ const CreateCampaign = () => {
     checkIfImage(form.image, async (exists) => {
       if (exists) {
         setIsLoading(true);
-        const data = await createCampaign({
+        await createCampaign({
           ...form,
           target: ethers.utils.parseUnits(form.target as string, 18),
         });
+        const campaigns = await getCampaigns();
         setIsLoading(false);
-        navigate(`/create-token/`);
+        navigate(`/create-token/${campaigns.length - 1}`);
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });
