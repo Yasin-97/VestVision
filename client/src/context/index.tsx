@@ -34,7 +34,6 @@ export type CampaignTokenType = {
   advisorShare: number;
   earlyInvestorsAddress: string;
   earlyInvestorsShare: number;
-  publicShare?: number;
 };
 
 export type CommentType = {

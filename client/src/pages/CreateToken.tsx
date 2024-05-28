@@ -13,14 +13,14 @@ const CreateCampaign = () => {
   const [form, setForm] = useState<formDataType>({
     name: "",
     symbol: "",
-    initialSupply: 0,
+    totalSupply: 0,
     campaignOwnerShare: 0,
     teamAddress: "",
     teamShare: 0,
     advisorAddress: "",
     advisorShare: 0,
-    reserveAddress: "",
-    reserveShare: 0,
+    earlyInvestorsAddress: "",
+    earlyInvestorsShare: 0,
   });
   useEffect(
     () =>
@@ -44,7 +44,7 @@ const CreateCampaign = () => {
       form.campaignId !== undefined &&
       form.name !== "" &&
       form.symbol !== "" &&
-      form.initialSupply > 0
+      form.totalSupply > 0
     ) {
       setIsLoading(true);
       await createTokenForCampaign(form);
@@ -90,15 +90,15 @@ const CreateCampaign = () => {
         </div>
 
         <FormField
-          labelName="Initial Supply *"
-          placeholder="Token Initial Supply "
-          value={form.initialSupply}
+          labelName="Total Supply *"
+          placeholder="Token Total Supply "
+          value={form.totalSupply}
           handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFormFieldChange("initialSupply", e)
+            handleFormFieldChange("totalSupply", e)
           }
         />
 
-        <div className="w-full flex flex-col justify-start gap-2 p-4 bg-[#13131a] rounded-[10px]">
+        <div className="w-full flex flex-col justify-start gap-4 p-4 py-10 bg-[#13131a] rounded-[10px]">
           <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191]">
             <span className="font-epilogue font-extrabold text-[14px] leading-[22px] text-gray-300">
               Percentage Share:{" "}
@@ -165,21 +165,21 @@ const CreateCampaign = () => {
         </div>
         <div className="flex flex-wrap gap-[40px]">
           <FormField
-            labelName="Reserve Address (optional)"
-            placeholder="Wallet Address Of Reserve"
+            labelName="Early Investors Address (optional)"
+            placeholder="Wallet Address Of Early Investors"
             inputType="text"
-            value={form.reserveAddress}
+            value={form.earlyInvestorsAddress}
             handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("reserveAddress", e)
+              handleFormFieldChange("earlyInvestorsAddress", e)
             }
           />
           <FormField
-            labelName="Reserve Share (default to 0)"
+            labelName="Early Investors Share (default to 0)"
             placeholder="0%"
             inputType="text"
-            value={form.reserveShare}
+            value={form.earlyInvestorsShare}
             handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("reserveShare", e)
+              handleFormFieldChange("earlyInvestorsShare", e)
             }
           />
         </div>
