@@ -9,26 +9,56 @@ import {
   Home,
   Profile,
 } from "./pages";
+import Landing from "./pages/Landing";
+import DashboardRoute from "./components/dashboard/DashboardRoute";
 
 const App = () => {
   return (
-    <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
-      <div className="sm:flex hidden mr-10 relative">
-        <Sidebar />
-      </div>
-
-      <div className="flex-1 max-sm:w-full max-w-[1280px] mx-auto sm:pr-5">
-        <Navbar />
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/create-campaign" element={<CreateCampaign />} />
-          <Route path="/create-token/:campaignId" element={<CreateToken />} />
-          <Route path="/campaign-details/:id" element={<CampaignDetails />} />
-        </Routes>
-      </div>
-    </div>
+    <>
+      <Routes>
+        <Route path="/landing" element={<Landing />} />
+        <Route
+          path="/dashboard"
+          element={
+            <DashboardRoute>
+              <Home />
+            </DashboardRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <DashboardRoute>
+              <Profile />
+            </DashboardRoute>
+          }
+        />
+        <Route
+          path="/create-campaign"
+          element={
+            <DashboardRoute>
+              <CreateCampaign />
+            </DashboardRoute>
+          }
+        />
+        <Route
+          path="/create-token/:campaignId"
+          element={
+            <DashboardRoute>
+              <CreateToken />
+            </DashboardRoute>
+          }
+        />
+        <Route
+          path="/campaign-details/:id"
+          element={
+            <DashboardRoute>
+              <CampaignDetails />
+            </DashboardRoute>
+          }
+        />
+      </Routes>
+    </>
   );
 };
 
