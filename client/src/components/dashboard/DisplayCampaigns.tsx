@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import FundCard from "./FundCard";
-import { loader } from "../assets";
-import { CampaignType } from "../context";
+import { loader } from "../../assets";
+import { CampaignType } from "../../context";
 
 type DisplayCampaignType = {
   title: string;

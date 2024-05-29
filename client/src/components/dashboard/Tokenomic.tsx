@@ -1,5 +1,5 @@
-import { CampaignTokenType } from "../context";
-import { loader } from "../assets";
+import { CampaignTokenType } from "../../context";
+import { loader } from "../../assets";
 
 type TokenomicProps = {
   isLoading: boolean;

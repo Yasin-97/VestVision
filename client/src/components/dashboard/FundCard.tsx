@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 
-import { tagType, thirdweb } from "../assets";
-import { daysLeft } from "../utils";
-import { CampaignType } from "../context";
+import { tagType, thirdweb } from "../../assets";
+import { daysLeft } from "../../utils";
+import { CampaignType } from "../../context";
 type FundCardType = CampaignType & { handleClick: () => void };
 const FundCard = ({
   category,

@@ -1,10 +1,10 @@
 import FormField from "./FormField";
 import Button from "./Button";
 import { BsFileEarmarkSpreadsheet } from "react-icons/bs";
-import { SingleComment } from "../components";
-import { CommentType, useStateContext } from "../context";
+import { SingleComment } from "..";
+import { CommentType, useStateContext } from "../../context";
 import { useEffect, useState } from "react";
-import { loader } from "../assets";
+import { loader } from "../../assets";
 
 type CommentsType = {
   campaignId: number;

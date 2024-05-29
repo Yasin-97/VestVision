@@ -11,7 +11,7 @@ import { money } from "../assets";
 import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
 import { CampaignType, useStateContext } from "../context";
-import SelectorInput from "../components/SelectorInput";
+import SelectorInput from "../components/dashboard/SelectorInput";
 type formDataType = CampaignType & { name: string };
 
 const campaignCategories = [

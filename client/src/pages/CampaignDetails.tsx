@@ -13,7 +13,7 @@ import defaultImg from "../../public/images/templates-preview.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { BiSolidLike } from "react-icons/bi";
 import confetti from "canvas-confetti";
-import Tokenomic from "../components/Tokenomic";
+import Tokenomic from "../components/dashboard/Tokenomic";
 
 const { firstColor, secondColor, dir } = avatarColor();
 

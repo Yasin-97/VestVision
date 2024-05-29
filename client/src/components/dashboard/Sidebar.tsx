@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { logo, sun } from "../assets";
-import { navlinks } from "../constants";
+import { logo, sun } from "../../assets";
+import { navlinks } from "../../constants";
 
 type IconType = {
   imgUrl: string;
