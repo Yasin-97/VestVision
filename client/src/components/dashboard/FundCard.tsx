@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 import { tagType, thirdweb } from "../../assets";
 import { daysLeft } from "../../utils";

@@ -29,7 +29,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   to {
     transform: rotate(360deg);
   }
-}
+} 
 
 .rotate-constant {
   animation: spin 1s linear infinite;
