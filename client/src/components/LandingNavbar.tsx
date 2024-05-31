@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AlignJustify, X } from "lucide-react";
-import DropDownMenu from "./DropDownMenu";
+import DropDownMenu from "./dashboard/DropDownMenu";
 import { Link } from "react-router-dom";
+import { logo } from "../assets";
 
 type NavbarProps = {
   scrollToWebsiteDesign: () => void;
@@ -30,78 +31,65 @@ const LandingNavbar = ({
   };
 
   return (
-    <div>
-      <div className="p-6 md:p-10 flex items-center justify-between z-50">
-        <div>
-          <Link to={"/"} className="cursor-pointer">
-            <img
-              src="/logo/logo.svg"
-              alt="Logo"
-              width={100}
-              height={100}
-              className="w-10 h-10 md:w-14 md:h-14"
-            />
-          </Link>
-        </div>
-        <div
-          className="cursor-pointer hidden 
+    <div className="p-6 md:p-10 flex items-center justify-between z-50">
+      <div>
+        <Link to={"/"} className="cursor-pointer">
+          <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
+        </Link>
+      </div>
+      <div
+        className="cursor-pointer hidden 
             md:flex space-x-10 items-center
              text-slate-300 text-center 
              bg-clip-text text-transparent 
              bg-gradient-to-b from-neutral-50
-              to bg-neutral-400 bg-opacity-50"
-        >
-          <div onClick={scrollToWebsiteDesign} className="hover:text-gray-50">
-            Website Design
-          </div>
-          <div onClick={scrollToGraphicDesign} className="hover:text-gray-50">
-            Graphic Design
-          </div>
-
-          <div onClick={scrollToShopifyStores} className="hover:text-gray-50">
-            Shopify Stores
-          </div>
-          <div onClick={scrollToBrands} className="hover:text-gray-50">
-            Brands
-          </div>
-
-          <Link to="/pricing" className="hover:text-gray-50">
-            Pricing
-          </Link>
+              to bg-neutral-400 bg-opacity-50 font-semibold"
+      >
+        <div onClick={scrollToWebsiteDesign} className="hover:text-gray-50">
+          Website Design
+        </div>
+        <div onClick={scrollToGraphicDesign} className="hover:text-gray-50">
+          Graphic Design
         </div>
 
-        <div className="flex md:hidden">
-          {isDropDownVisible ? (
-            <div
-              onClick={toggleDropDown}
-              className="w-8 h-8 text-slate-300 cursor-pointer"
-            >
-              <X />
-              <DropDownMenu onClose={closeDropDown} />
-            </div>
-          ) : (
-            <AlignJustify
-              onClick={toggleDropDown}
-              className="w-8 h-8 text-slate-300 cursor-pointer"
-            />
-          )}
+        <div onClick={scrollToShopifyStores} className="hover:text-gray-50">
+          Shopify Stores
+        </div>
+        <div onClick={scrollToBrands} className="hover:text-gray-50">
+          Brands
         </div>
 
-        <div className="hidden md:flex">
-          <Link
-            to="/contact"
-            className="
-            inline-flex h-12 animate-shimmer items-center justify-center 
-            rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] 
-            bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors
-             focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2
-              focus:ring-offset-slate-50
+        <Link to="/pricing" className="hover:text-gray-50">
+          Pricing
+        </Link>
+      </div>
 
-            "
+      <div className="flex md:hidden">
+        {isDropDownVisible ? (
+          <div
+            onClick={toggleDropDown}
+            className="w-8 h-8 text-slate-300 cursor-pointer"
           >
-            Contact
-          </Link>
-        </div>
+            <X />
+            <DropDownMenu onClose={closeDropDown} />
+          </div>
+        ) : (
+          <AlignJustify
+            onClick={toggleDropDown}
+            className="w-8 h-8 text-slate-300 cursor-pointer"
+          />
+        )}
+      </div>
+
+      <div className="hidden md:flex">
+        <Link
+          to="/contact"
+          className=" bg-black
+  font-semibold px-6 py-1 border border-gray-600 rounded-[4px] transition-all 
+  text-gray-400 hover:text-gray-300 hover:border-gray-500"
+        >
+          Contact
+        </Link>
       </div>
     </div>
   );
