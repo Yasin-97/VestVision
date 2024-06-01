@@ -7,18 +7,17 @@ import { Link } from "react-router-dom";
 import { logo } from "../assets";
 
 type NavbarProps = {
-  scrollToWebsiteDesign: () => void;
-  scrollToGraphicDesign: () => void;
-  scrollToShopifyStores: () => void;
-  scrollToBrands: () => void;
-  scrollToServices: () => void;
+  scrollToHome: () => void;
+  scrollToRecentCampaigns: () => void;
+  scrollToFeatures: () => void;
+  scrollToFAQ: () => void;
 };
 
 const LandingNavbar = ({
-  scrollToWebsiteDesign,
-  scrollToGraphicDesign,
-  scrollToShopifyStores,
-  scrollToBrands,
+  scrollToHome,
+  scrollToRecentCampaigns,
+  scrollToFeatures,
+  scrollToFAQ,
 }: NavbarProps) => {
   const [isDropDownVisible, setIsDropDownVisible] = useState(false);
 
@@ -49,33 +48,32 @@ const LandingNavbar = ({
              bg-gradient-to-b from-neutral-50
               to bg-neutral-400 bg-opacity-50 font-semibold"
       >
-        <div onClick={scrollToWebsiteDesign} className="hover:text-gray-50">
-          Website Design
+        <div onClick={scrollToHome} className="hover:text-gray-50">
+          Home
         </div>
-        <div onClick={scrollToGraphicDesign} className="hover:text-gray-50">
-          Graphic Design
-        </div>
-
-        <div onClick={scrollToShopifyStores} className="hover:text-gray-50">
-          Shopify Stores
-        </div>
-        <div onClick={scrollToBrands} className="hover:text-gray-50">
-          Brands
+        <div onClick={scrollToRecentCampaigns} className="hover:text-gray-50">
+          Recent Campaigns
         </div>
 
-        <Link to="/pricing" className="hover:text-gray-50">
-          Pricing
-        </Link>
+        <div onClick={scrollToFeatures} className="hover:text-gray-50">
+          Features
+        </div>
+        <div onClick={scrollToFAQ} className="hover:text-gray-50">
+          FAQ
+        </div>
       </div>
 
       <div className="flex md:hidden">
         {isDropDownVisible ? (
-          <div
-            onClick={toggleDropDown}
-            className="w-8 h-8 text-slate-300 cursor-pointer"
-          >
-            <X />
-            <DropDownMenu onClose={closeDropDown} />
+          <div className="w-8 h-8 text-slate-300 cursor-pointer">
+            <X onClick={closeDropDown} />
+            <DropDownMenu
+              scrollToHome={scrollToHome}
+              scrollToRecentCampaigns={scrollToRecentCampaigns}
+              scrollToFeatures={scrollToFeatures}
+              scrollToFAQ={scrollToFAQ}
+              onClose={closeDropDown}
+            />
           </div>
         ) : (
           <AlignJustify
@@ -89,10 +87,10 @@ const LandingNavbar = ({
         <Link
           to="/contact"
           className=" bg-black
-  font-semibold px-6 py-1 border border-gray-600 rounded-[4px] transition-all 
+  font-semibold px-6 py-2 border border-gray-600 rounded-[4px] transition-all 
   text-gray-400 hover:text-gray-300 hover:border-gray-500"
         >
-          Contact
+          Get Connected
         </Link>
       </div>
     </div>
