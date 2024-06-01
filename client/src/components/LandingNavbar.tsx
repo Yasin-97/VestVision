@@ -34,7 +34,11 @@ const LandingNavbar = ({
     <div className="p-6 md:p-10 flex items-center justify-between z-50">
       <div>
         <Link to={"/"} className="cursor-pointer">
-          <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-10 h-10 md:w-12 md:h-12 object-contain"
+          />
         </Link>
       </div>
       <div
