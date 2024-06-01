@@ -5,8 +5,8 @@ type FundCardType = { campaign: CampaignType };
 export function FundCard({ campaign }: FundCardType) {
   return (
     <CardContainer
-      className="inter-var"
-      containerClassName="w-[340px] lg:w-[390px]"
+      className=" inter-var"
+      containerClassName=" w-[340px] lg:w-[390px]"
     >
       <CardBody className="bg-[#1c1c24] relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] w-auto h-auto rounded-t-xl p-6 border-b-4 border-[#808191]">
         <CardItem translateZ="50" className="text-xl font-bold text-white">
@@ -15,7 +15,7 @@ export function FundCard({ campaign }: FundCardType) {
         <CardItem
           as="p"
           translateZ="60"
-          className=" text-sm max-w-sm mt-2 text-[#808191]"
+          className=" text-sm font-semibold mt-2 text-[#808191] line-clamp-3"
         >
           {campaign.description}
         </CardItem>
@@ -33,7 +33,7 @@ export function FundCard({ campaign }: FundCardType) {
             <CardItem
               translateZ={20}
               as="button"
-              className=" ml-1 font-epilogue font-semibold text-[30px] text-white leading-[22px]"
+              className=" ml-1 font-epilogue font-semibold text-2xl text-white leading-[22px]"
             >
               {campaign.amountCollected}
             </CardItem>
@@ -48,10 +48,10 @@ export function FundCard({ campaign }: FundCardType) {
           <CardItem
             translateZ={20}
             as="button"
-            className=" p-2 flex gap-1 items-center"
+            className=" p-2 flex gap-1 items-center self-end"
           >
             <MdVerifiedUser className="text-green-400 text-xl" />
-            <span className=" text-white">VERIFIED</span>
+            <span className=" text-white text-sm">VERIFIED</span>
           </CardItem>
         </div>
       </CardBody>
