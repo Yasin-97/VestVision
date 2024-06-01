@@ -31,13 +31,12 @@ const RecentCampaigns = () => {
 
   return (
     <div className=" p-4 pt-0 mx-auto relative z-10  w-full">
-      <div className="pb-8 text-4xl md:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-[#1DC071] to-sky-200 bg-opacity-50">
-        Graphic Design
+      <div className="font-medium pb-8 text-4xl md:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-[#1DC071] to-sky-200 bg-opacity-50">
+        Innovation Queue
       </div>
 
       <p className="mb-8 text-lg  text-neutral-300 max-w-lg text-center mx-auto font-semibold">
-        We create stunning visuals for your brand. From logos to social media
-        posts, we&apos;ve got you covered.
+        Explore the Latest Tech Ventures Seeking Your Support
       </p>
       <div className="items-center md:flex justify-center md:mx-auto md:space-x-10">
         {isLoading && (
