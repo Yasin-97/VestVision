@@ -30,11 +30,22 @@ contract CrowdFunding {
         string text;
     }
 
+    struct RecenetInvestments {
+        address sender;
+        uint256 amount;
+        string title;
+    }
+
     mapping(uint256 => Campaign) public campaigns;
     mapping(uint256 => Like[]) public campaignLikes;
     mapping(uint256 => mapping(uint256 => Comment)) public campaignComments;
 
     uint256 public numberOfCampaigns = 0;
+    uint256 public numberOfInvestments = 0;
+    uint256 public numberOfInvestors = 0;
+
+    RecenetInvestments[5] public recentInvestments;
+    uint256 public nextInvestmentIndex = 0;
 
     function createCampaign(
         address _owner,
@@ -106,11 +117,6 @@ contract CrowdFunding {
         campaignLikes[_id].push(newLike);
     }
 
-    function getNumberOfLikes(uint256 _id) public view returns (uint256) {
-        require(_id < numberOfCampaigns, "Campaign does not exist.");
-        return campaignLikes[_id].length;
-    }
-
     function addComment(
         uint256 _id,
         string memory _text
@@ -132,6 +138,17 @@ contract CrowdFunding {
         campaign.investors.push(msg.sender);
         campaign.investments.push(amount);
 
+        numberOfInvestments += amount;
+        numberOfInvestors++;
+
+        recentInvestments[nextInvestmentIndex] = RecenetInvestments({
+            sender: msg.sender,
+            amount: amount,
+            title: campaign.title
+        });
+
+        nextInvestmentIndex = (nextInvestmentIndex + 1) % 5;
+
         (bool sent, ) = payable(campaign.owner).call{value: amount}("");
 
         if (sent) {
@@ -151,6 +168,11 @@ contract CrowdFunding {
         uint256 _id
     ) public view returns (address[] memory, uint256[] memory) {
         return (campaigns[_id].investors, campaigns[_id].investments);
+    }
+
+    function getNumberOfLikes(uint256 _id) public view returns (uint256) {
+        require(_id < numberOfCampaigns, "Campaign does not exist.");
+        return campaignLikes[_id].length;
     }
 
     function getAllComments(
@@ -202,5 +224,18 @@ contract CrowdFunding {
 
         ITokenData tokenContract = ITokenData(address(campaigns[_id].token));
         return tokenContract.tokenData();
+    }
+
+    function getInvestmentSummary()
+        public
+        view
+        returns (uint256, uint256, uint256, RecenetInvestments[5] memory)
+    {
+        return (
+            numberOfInvestments,
+            numberOfInvestors,
+            numberOfCampaigns,
+            recentInvestments
+        );
     }
 }
