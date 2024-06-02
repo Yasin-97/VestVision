@@ -9,7 +9,7 @@ const LandingStats = () => {
             4,8900+
           </h4>
           <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
-            Much better
+            # of Investors
           </p>
         </div>
         <div className="flex flex-col items-center ">
@@ -17,7 +17,7 @@ const LandingStats = () => {
             4,8900+
           </h4>
           <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
-            Much better
+            Invested In Projects
           </p>
         </div>
         <div className="flex flex-col items-center ">
@@ -25,7 +25,7 @@ const LandingStats = () => {
             4,8900+
           </h4>
           <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
-            Much better
+            Projects
           </p>
         </div>
       </div>
