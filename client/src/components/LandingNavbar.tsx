@@ -3,8 +3,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AlignJustify, X } from "lucide-react";
 import DropDownMenu from "./dashboard/DropDownMenu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logo } from "../assets";
+import { useStateContext } from "../context";
+import Button from "./dashboard/Button";
 
 type NavbarProps = {
   scrollToHome: () => void;
@@ -19,6 +21,15 @@ const LandingNavbar = ({
   scrollToFeatures,
   scrollToFAQ,
 }: NavbarProps) => {
+  const navigate = useNavigate();
+
+  const { address, connect } = useStateContext();
+
+  const connectAndNavigate = async () => {
+    await connect();
+    if (address) navigate("/dashboard");
+  };
+
   const [isDropDownVisible, setIsDropDownVisible] = useState(false);
 
   const toggleDropDown = () => {
@@ -84,14 +95,17 @@ const LandingNavbar = ({
       </div>
 
       <div className="hidden md:flex">
-        <Link
-          to="/contact"
-          className=" bg-black
-  font-semibold px-6 py-2 border border-gray-600 rounded-[4px] transition-all 
-  text-gray-400 hover:text-gray-300 hover:border-gray-500"
-        >
-          Get Connected
-        </Link>
+        <Button
+          btnType="button"
+          title={address ? "Explore More" : "Get Connected"}
+          styles=" bg-black
+  font-semibold px-6 py-2 border border-gray-600 rounded-[8px] transition-all 
+  !text-gray-400 hover:!text-gray-300 hover:border-gray-500"
+          handleClick={() => {
+            if (address) navigate("/dashboard");
+            else connectAndNavigate();
+          }}
+        />
       </div>
     </div>
   );

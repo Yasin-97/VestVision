@@ -26,7 +26,9 @@ const RecentCampaigns = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (campaign: CampaignType) => {
-    navigate(`/campaign-details/${campaign.title}`, { state: campaign });
+    navigate(`/dashboard/campaign-details/${campaign.title}`, {
+      state: campaign,
+    });
   };
 
   return (
@@ -56,7 +58,7 @@ const RecentCampaigns = () => {
             className="flex gap-5 flex-wrap justify-center max-w-[1024px]"
           >
             {campaigns.map((campaign) => (
-              <FundCard campaign={campaign} />
+              <FundCard onClick={handleNavigate} campaign={campaign} />
             ))}
           </motion.div>
         )}

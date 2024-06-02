@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import LandingNavbar from "../components/LandingNavbar";
 import { HeroHighlight } from "../components/HeroHighlight";
-import GraphicDesign from "../components/landing/RecentCampaigns";
+import RecentCampaigns from "../components/landing/RecentCampaigns";
 import Features from "../components/landing/Features";
 import FAQs from "../components/landing/FAQs";
 import Hero from "../components/landing/Hero";
@@ -49,7 +49,7 @@ const Landing = (props: Props) => {
         <Hero />
       </HeroHighlight>
       <div ref={recentCampaignsRef}>
-        <GraphicDesign />
+        <RecentCampaigns />
         <LandingStats />
       </div>
       <div ref={featuresRef}>

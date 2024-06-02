@@ -1,10 +1,11 @@
 import { MdOutlineGeneratingTokens } from "react-icons/md";
 import { FlipWords } from "../FlipWords";
 import Button from "../dashboard/Button";
+import { useNavigate } from "react-router-dom";
 
-type Props = {};
+const Hero = () => {
+  const navigate = useNavigate();
 
-const Hero = (props: Props) => {
   return (
     <div className="p-4 mx-auto relative z-10 w-full pt-10 md:pt-20 px-2 flex flex-col items-center justify-center">
       <p className="bg-black text-xs sm:text-sm md:text-md text-[#808191] my-10 rounded-xl border border-[#28282e] py-1 px-3 font-semibold">
@@ -37,7 +38,9 @@ const Hero = (props: Props) => {
       <Button
         title="Make Your Impact"
         btnType="button"
-        handleClick={() => {}}
+        handleClick={() => {
+          navigate("/dashboard");
+        }}
         styles=" border border-[#77D9AA] bg-black mt-16 md:mt-20 transitoin-all hover:bg-[#77D9AA] text-lg md:!text-xl"
       />
     </div>
