@@ -26,7 +26,7 @@ const App = () => {
           }
         />
         <Route
-          path="/profile"
+          path="/dashboard/profile"
           element={
             <DashboardRoute>
               <Profile />
@@ -34,7 +34,7 @@ const App = () => {
           }
         />
         <Route
-          path="/create-campaign"
+          path="/dashboard/create-campaign"
           element={
             <DashboardRoute>
               <CreateCampaign />
@@ -42,7 +42,7 @@ const App = () => {
           }
         />
         <Route
-          path="/create-token/:campaignId"
+          path="/dashboard/create-token/:campaignId"
           element={
             <DashboardRoute>
               <CreateToken />
@@ -50,7 +50,7 @@ const App = () => {
           }
         />
         <Route
-          path="/campaign-details/:id"
+          path="/dashboard/campaign-details/:id"
           element={
             <DashboardRoute>
               <CampaignDetails />
