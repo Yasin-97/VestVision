@@ -8,19 +8,34 @@ import { useNavigate } from "react-router-dom";
 import { loader } from "../../assets";
 
 const RecentCampaigns = () => {
-  const { address, contract, getCampaigns } = useStateContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const { address, contract, getCampaigns, getInvestmentSummary } =
+    useStateContext();
+  const [isLoading, setIsLoading] = useState({
+    campaigns: true,
+    investmentSummary: true,
+  });
   const [campaigns, setCampaigns] = useState<CampaignType[]>([]);
+  const [investmentSummary, setInvestmentSummary] = useState<any>([]);
 
   const fetchCampaigns = async () => {
-    setIsLoading(true);
+    setIsLoading({ ...isLoading, campaigns: true });
     const data = await getCampaigns();
     setCampaigns(data.splice(0, 4));
-    setIsLoading(false);
+    setIsLoading({ ...isLoading, campaigns: false });
+  };
+
+  const fetchInvestmentSummary = async () => {
+    setIsLoading({ ...isLoading, investmentSummary: true });
+    const data = await getInvestmentSummary();
+    setInvestmentSummary(data);
+    setIsLoading({ ...isLoading, investmentSummary: true });
   };
 
   useEffect(() => {
-    if (contract) fetchCampaigns();
+    if (contract) {
+      fetchCampaigns();
+      fetchInvestmentSummary();
+    }
   }, [address, contract]);
 
   const navigate = useNavigate();

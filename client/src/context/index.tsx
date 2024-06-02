@@ -62,6 +62,7 @@ type contextType = {
   likeCampaign: (pId: number) => Promise<void>;
   getComments: (pId: number) => Promise<CommentType[]>;
   getNumberOfLikes: (pId: number) => Promise<string>;
+  getInvestmentSummary: () => Promise<string>;
 };
 type StateContextProviderType = { children: ReactNode };
 
@@ -102,12 +103,15 @@ const StateContext = createContext<contextType>({
   getNumberOfLikes: async (pId) => {
     throw new Error("getNumberOfLikes function not implemented");
   },
+  getInvestmentSummary: async () => {
+    throw new Error("getInvestmentSummary function not implemented");
+  },
 });
 export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
   const { contract } = useContract(
-    "0x3A98B7FFaBF592be494603328EEc6290e3b12cB5"
+    "0x2975B01B19604fCAf76aC5f8ccDB69A9b7b6877e"
   );
 
   const { mutateAsync: createCampaign } = useContractWrite(
@@ -162,6 +166,14 @@ export const StateContextProvider = ({
     } catch (error) {
       console.log("contract call failure", error);
     }
+  };
+
+  const invest = async (pId: number, amount: string) => {
+    const data = await contract?.call("investInCampaign", [pId], {
+      value: ethers.utils.parseEther(amount),
+    });
+
+    return data;
   };
 
   const addComment = async (pId: number, text: string) => {
@@ -237,12 +249,9 @@ export const StateContextProvider = ({
     return likesCount._hex;
   };
 
-  const invest = async (pId: number, amount: string) => {
-    const data = await contract?.call("investInCampaign", [pId], {
-      value: ethers.utils.parseEther(amount),
-    });
-
-    return data;
+  const getInvestmentSummary = async () => {
+    const investmentSummary = await contract?.call("getInvestmentSummary");
+    console.log("the data is here", investmentSummary);
   };
 
   const getInvesments = async (pId: number) => {
@@ -312,6 +321,7 @@ export const StateContextProvider = ({
         getInvesments,
         getUserCampaigns,
         getNumberOfLikes,
+        getInvestmentSummary,
         getCampaignTokenData,
         createCampaign: publishCampaign,
         createTokenForCampaign: mintTokenForCampaign,
