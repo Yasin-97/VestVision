@@ -5,8 +5,7 @@ import React, {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { BigNumber, ethers } from "ethers";
-
+import { ethers } from "ethers";
 import { money } from "../assets";
 import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
@@ -42,9 +41,15 @@ const CreateCampaign = () => {
 
   const handleFormFieldChange = (
     fieldName: string,
-    e: ChangeEvent<HTMLInputElement>
+    e: ChangeEvent<HTMLInputElement> | string
   ) => {
-    setForm({ ...form, [fieldName]: e.target.value });
+    if (fieldName === "description") {
+      setForm({ ...form, description: e as string });
+    }
+    setForm({
+      ...form,
+      [fieldName]: (e as ChangeEvent<HTMLInputElement>).target.value,
+    });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,24 +92,21 @@ const CreateCampaign = () => {
             setForm({ ...form, category: selected })
           }
         />
+
         <div className="flex flex-wrap gap-[40px]">
           <FormField
             labelName="Your Name *"
             placeholder="John Doe"
             inputType="text"
             value={form.name}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("name", e)
-            }
+            handleChange={(e) => handleFormFieldChange("name", e)}
           />
           <FormField
             labelName="Campaign Title *"
             placeholder="Write a title"
             inputType="text"
             value={form.title}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("title", e)
-            }
+            handleChange={(e) => handleFormFieldChange("title", e)}
           />
         </div>
 
@@ -113,9 +115,7 @@ const CreateCampaign = () => {
           placeholder="Write your story"
           isTextArea
           value={form.description}
-          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFormFieldChange("description", e)
-          }
+          handleChange={(e) => handleFormFieldChange("description", e)}
         />
 
         <div className="w-full flex justify-start items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]">
@@ -135,18 +135,14 @@ const CreateCampaign = () => {
             placeholder="ETH 0.50"
             inputType="text"
             value={form.target}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("target", e)
-            }
+            handleChange={(e) => handleFormFieldChange("target", e)}
           />
           <FormField
             labelName="End Date *"
             placeholder="End Date"
             inputType="date"
             value={form.deadline}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFormFieldChange("deadline", e)
-            }
+            handleChange={(e) => handleFormFieldChange("deadline", e)}
           />
         </div>
 
@@ -155,9 +151,7 @@ const CreateCampaign = () => {
           placeholder="Place image URL of your campaign"
           inputType="url"
           value={form.image}
-          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFormFieldChange("image", e)
-          }
+          handleChange={(e) => handleFormFieldChange("image", e)}
         />
 
         <div className="flex justify-center items-center mt-[40px]">
