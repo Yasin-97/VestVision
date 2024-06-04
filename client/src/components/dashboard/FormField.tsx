@@ -1,11 +1,11 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ChangeEventHandler } from "react";
+import { ChangeEvent } from "react";
 import { Toolbar } from "./Toolbar";
 
 type FormFieldType = {
   placeholder: string;
-  handleChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  handleChange: (str: string | ChangeEvent<HTMLInputElement>) => void;
   labelName?: string;
   className?: string;
   textAreaRow?: number;
@@ -62,7 +62,7 @@ const FormField = ({
           spellCheck
           required
           value={value}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e)}
           type={inputType}
           step="0.1"
           placeholder={placeholder}
