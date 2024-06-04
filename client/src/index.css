@@ -65,3 +65,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.rich-text h1 {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: bold;
+  font-size: 25px; /* Adjusted size for H2 */
+  line-height: 38px; /* Adjusted line-height for H2 */
+  color: white;
+}
+
+.rich-text h2 {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: bold;
+  font-size: 20px; /* Adjusted size for H2 */
+  line-height: 32px; /* Adjusted line-height for H2 */
+  color: white;
+}
+
+.rich-text h3 {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: bold;
+  font-size: 16px; /* Adjusted size for H3 */
+  line-height: 28px; /* Adjusted line-height for H3 */
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .rich-text h2 {
+    font-size: 20px; /* Adjusted size for H2 at breakpoint */
+    line-height: 32px;
+  }
+  .rich-text h3 {
+    font-size: 18px; /* Adjusted size for H3 at breakpoint */
+    line-height: 28px;
+  }
+}
