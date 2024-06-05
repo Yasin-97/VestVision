@@ -45,7 +45,7 @@ const CreateCampaign = () => {
     e: ChangeEvent<HTMLInputElement> | string
   ) => {
     if (fieldName === "description") {
-      setForm({ ...form, description: e as string });
+      return setForm({ ...form, description: e as string });
     }
     setForm({
       ...form,
@@ -64,7 +64,7 @@ const CreateCampaign = () => {
         });
         const campaigns = await getCampaigns();
         setIsLoading(false);
-        navigate(`/create-token/${campaigns.length - 1}`);
+        // navigate(`/create-token/${campaigns.length - 1}`);
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });

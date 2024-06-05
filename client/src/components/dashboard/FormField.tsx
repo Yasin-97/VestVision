@@ -26,15 +26,16 @@ const FormField = ({
 }: FormFieldType) => {
   const editor = useEditor({
     extensions: [StarterKit.configure()],
-    content: value,
     editorProps: {
       attributes: {
         class:
           " min-h-[250px] py-[15px] sm:px-[25px] px-[15px] outline-none  b font-epilogue text-white text-[14px] placeholder:text-[#4b5264]",
       },
     },
-    onUpdate({ editor }) {
-      handleChange(editor.getHTML());
+    onCreate({ editor }) {
+      editor.on("transaction", ({ editor }) => {
+        handleChange(editor.getHTML());
+      });
     },
   });
 
@@ -48,13 +49,7 @@ const FormField = ({
       {isTextArea && editor ? (
         <div className="rich-text bg-transparent border-[1px] border-[#3a3a43] rounded-[10px] sm:min-w-[300px]">
           <Toolbar editor={editor} />
-          <EditorContent
-            editor={editor}
-            disabled={isLoading}
-            spellCheck
-            required
-            placeholder={placeholder}
-          />
+          <EditorContent editor={editor} />
         </div>
       ) : (
         <input
