@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   FormEvent,
   FormEventHandler,
+  useCallback,
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,7 @@ const campaignCategories = [
   { name: "AgriTech" },
   { name: "Robotics" },
   { name: "Blockchain" },
-  { name: "Transportation" },
+  { name: "Quantum Computing" },
 ];
 const CreateCampaign = () => {
   const { createCampaign, getCampaigns } = useStateContext();
