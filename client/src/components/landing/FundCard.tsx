@@ -1,14 +1,18 @@
 import { CardBody, CardContainer, CardItem } from "./3DCard";
 import { CampaignType } from "../../context";
 import { MdVerifiedUser } from "react-icons/md";
-type FundCardType = { campaign: CampaignType; onClick: () => void };
-export function FundCard({ campaign, onClick }: FundCardType) {
+type FundCardType = {
+  campaign: CampaignType;
+  clickHandler: <T extends CampaignType>(arg: T) => void;
+};
+export function FundCard({ campaign, clickHandler }: FundCardType) {
   return (
     <CardContainer
+      onClick={() => clickHandler(campaign)}
       className=" inter-var"
       containerClassName=" w-[340px] lg:w-[390px]"
     >
-      <CardBody className="bg-[#1c1c24] relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] w-auto h-auto rounded-t-xl p-6 border-b-4 border-[#808191]">
+      <CardBody className="bg-[#1c1c24] relative hover:shadow-2xl hover:shadow-emerald-500/[0.1] w-auto h-auto rounded-t-xl p-6 border-b-4 border-[#808191]">
         <CardItem translateZ="50" className="text-xl font-bold text-white">
           {campaign.title}
         </CardItem>
@@ -17,7 +21,7 @@ export function FundCard({ campaign, onClick }: FundCardType) {
           translateZ="60"
           className=" text-sm font-semibold mt-2 text-[#808191] line-clamp-3"
         >
-          {campaign.description}
+          <span dangerouslySetInnerHTML={{ __html: campaign.description }} />
         </CardItem>
         <CardItem translateZ="100" className="w-full mt-4">
           <img
