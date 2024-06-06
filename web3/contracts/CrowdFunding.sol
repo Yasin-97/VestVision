@@ -30,7 +30,7 @@ contract CrowdFunding {
         string text;
     }
 
-    struct RecenetInvestments {
+    struct RecentInvestments {
         address sender;
         uint256 amount;
         string title;
@@ -44,7 +44,7 @@ contract CrowdFunding {
     uint256 public numberOfInvestments = 0;
     uint256 public numberOfInvestors = 0;
 
-    RecenetInvestments[5] public recentInvestments;
+    RecentInvestments[5] public recentInvestments;
     uint256 public nextInvestmentIndex = 0;
 
     function createProject(
@@ -141,7 +141,7 @@ contract CrowdFunding {
         numberOfInvestments += amount;
         numberOfInvestors++;
 
-        recentInvestments[nextInvestmentIndex] = RecenetInvestments({
+        recentInvestments[nextInvestmentIndex] = RecentInvestments({
             sender: msg.sender,
             amount: amount,
             title: project.title
@@ -236,7 +236,7 @@ contract CrowdFunding {
     function getInvestmentSummary()
         public
         view
-        returns (uint256, uint256, uint256, RecenetInvestments[5] memory)
+        returns (uint256, uint256, uint256, RecentInvestments[5] memory)
     {
         return (
             numberOfInvestments,
