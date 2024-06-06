@@ -1,5 +1,5 @@
 import React from "react";
-import { shortenAddress } from "../../utils";
+import { shortenAddress } from "../../lib/utils";
 
 export type SingleCommentProps = {
   dir: string;
