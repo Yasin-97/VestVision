@@ -36,16 +36,16 @@ contract CrowdFunding {
         string title;
     }
 
-    mapping(uint256 => Project) public projects;
-    mapping(uint256 => Like[]) public projectLikes;
-    mapping(uint256 => mapping(uint256 => Comment)) public projectComments;
+    mapping(uint256 => Project) private projects;
+    mapping(uint256 => Like[]) private projectLikes;
+    mapping(uint256 => mapping(uint256 => Comment)) private projectComments;
 
-    uint256 public numberOfProjects = 0;
-    uint256 public numberOfInvestments = 0;
-    uint256 public numberOfInvestors = 0;
+    uint256 private numberOfProjects = 0;
+    uint256 private numberOfInvestments = 0;
+    uint256 private numberOfInvestors = 0;
 
-    RecentInvestments[5] public recentInvestments;
-    uint256 public nextInvestmentIndex = 0;
+    RecentInvestments[5] private recentInvestments;
+    uint256 private nextInvestmentIndex = 0;
 
     function createProject(
         address _owner,
