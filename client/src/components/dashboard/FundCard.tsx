@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { tagType, thirdweb } from "../../assets";
-import { daysLeft } from "../../utils";
+import { daysLeft } from "../../lib/utils";
 import { CampaignType } from "../../context";
 type FundCardType = CampaignType & { handleClick: () => void };
 const FundCard = ({
@@ -44,9 +44,10 @@ const FundCard = ({
           <h3 className="font-epilogue font-semibold text-[16px] text-white text-left leading-[26px] truncate">
             {title}
           </h3>
-          <p className="mt-[5px] font-epilogue font-normal text-[#808191] text-left leading-[18px] truncate">
-            {description}
-          </p>
+          <p
+            className="mt-[5px] font-epilogue font-normal text-[#808191] text-left leading-[18px] line-clamp-1"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
         </div>
 
         <div className="flex justify-between flex-wrap mt-[15px] gap-2">

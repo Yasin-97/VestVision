@@ -18,7 +18,9 @@ const DisplayCampaigns = ({
   const navigate = useNavigate();
 
   const handleNavigate = (campaign: CampaignType) => {
-    navigate(`/campaign-details/${campaign.title}`, { state: campaign });
+    navigate(`/dashboard/campaign-details/${campaign.title}`, {
+      state: campaign,
+    });
   };
 
   return (

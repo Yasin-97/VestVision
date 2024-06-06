@@ -23,7 +23,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
           />
         )}
         {!isLoading && !tokenData && (
-          <p className="font-epilogue font-semibold text-[14px] leading-[22px] text-white py-4">
+          <p className="font-epilogue font-semibold text-[14px] leading-[22px] text-[#808191] py-4">
             No tokenomic strategy yet.
           </p>
         )}

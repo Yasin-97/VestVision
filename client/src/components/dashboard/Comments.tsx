@@ -49,7 +49,7 @@ const Comments = ({ campaignId }: CommentsType) => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-start gap-5 mt-5 pb-20">
+    <div className="flex flex-col lg:flex-row items-start gap-5 mt-20 pb-20">
       <div className="w-full p-4 flex flex-col bg-[#1c1c24] rounded-[10px] flex-[2]">
         <p
           onClick={fetchComments}
@@ -103,7 +103,7 @@ const Comments = ({ campaignId }: CommentsType) => {
             placeholder="Your thought"
             isTextArea
             value={comment}
-            handleChange={(e) => setComment(e.target.value)}
+            handleChange={(e) => setComment(() => e.target.value)}
           />
 
           <Button
