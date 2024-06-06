@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "./CampaignToken.sol";
+import "./ProjectToken.sol";
 import "./ITokenData.sol";
 
 contract CrowdFunding {
-    struct Campaign {
+    struct Project {
         address owner;
         string category;
         string title;
@@ -16,7 +16,7 @@ contract CrowdFunding {
         string image;
         address[] investors;
         uint256[] investments;
-        CampaignToken token;
+        ProjectToken token;
         uint256 numberOfComments;
     }
 
@@ -36,18 +36,18 @@ contract CrowdFunding {
         string title;
     }
 
-    mapping(uint256 => Campaign) public campaigns;
-    mapping(uint256 => Like[]) public campaignLikes;
-    mapping(uint256 => mapping(uint256 => Comment)) public campaignComments;
+    mapping(uint256 => Project) public projects;
+    mapping(uint256 => Like[]) public projectLikes;
+    mapping(uint256 => mapping(uint256 => Comment)) public projectComments;
 
-    uint256 public numberOfCampaigns = 0;
+    uint256 public numberOfProjects = 0;
     uint256 public numberOfInvestments = 0;
     uint256 public numberOfInvestors = 0;
 
     RecenetInvestments[5] public recentInvestments;
     uint256 public nextInvestmentIndex = 0;
 
-    function createCampaign(
+    function createProject(
         address _owner,
         string memory _title,
         string memory _category,
@@ -56,32 +56,32 @@ contract CrowdFunding {
         uint256 _deadline,
         string memory _image
     ) public returns (uint256) {
-        Campaign storage campaign = campaigns[numberOfCampaigns];
+        Project storage project = projects[numberOfProjects];
         require(
-            campaign.deadline < block.timestamp,
+            project.deadline < block.timestamp,
             "The deadline should be a date in the future."
         );
 
-        campaign.owner = _owner;
-        campaign.title = _title;
-        campaign.category = _category;
-        campaign.description = _description;
-        campaign.target = _target;
-        campaign.deadline = _deadline;
-        campaign.amountCollected = 0;
-        campaign.image = _image;
+        project.owner = _owner;
+        project.title = _title;
+        project.category = _category;
+        project.description = _description;
+        project.target = _target;
+        project.deadline = _deadline;
+        project.amountCollected = 0;
+        project.image = _image;
 
-        numberOfCampaigns++;
+        numberOfProjects++;
 
-        return numberOfCampaigns - 1;
+        return numberOfProjects - 1;
     }
 
-    function createTokenForCampaign(
-        uint256 campaignId,
+    function createTokenForProject(
+        uint256 projectId,
         string memory name,
         string memory symbol,
         uint256 initialSupply,
-        uint256 campaignOwnerShare,
+        uint256 projectOwnerShare,
         address teamAddress,
         uint256 teamShare,
         address advisorAddress,
@@ -89,13 +89,13 @@ contract CrowdFunding {
         address reserveAddress,
         uint256 reserveShare
     ) public {
-        require(campaignId < numberOfCampaigns, "Campaign does not exist");
+        require(projectId < numberOfProjects, "Project does not exist");
 
-        CampaignToken token = new CampaignToken(
+        ProjectToken token = new ProjectToken(
             name,
             symbol,
             initialSupply,
-            campaignOwnerShare,
+            projectOwnerShare,
             teamAddress,
             teamShare,
             advisorAddress,
@@ -104,17 +104,17 @@ contract CrowdFunding {
             reserveShare
         );
 
-        campaigns[campaignId].token = token;
+        projects[projectId].token = token;
     }
 
-    function likeCampaign(uint256 _id) public {
-        require(_id < numberOfCampaigns, "Campaign does not exist.");
+    function likeProject(uint256 _id) public {
+        require(_id < numberOfProjects, "Project does not exist.");
 
         Like memory newLike = Like({
             liker: msg.sender,
             timestamp: block.timestamp
         });
-        campaignLikes[_id].push(newLike);
+        projectLikes[_id].push(newLike);
     }
 
     function addComment(
@@ -122,21 +122,21 @@ contract CrowdFunding {
         string memory _text
     ) public returns (Comment memory) {
         Comment memory newComment = Comment({owner: msg.sender, text: _text});
-        campaignComments[_id][campaigns[_id].numberOfComments] = newComment;
-        campaigns[_id].numberOfComments++;
+        projectComments[_id][projects[_id].numberOfComments] = newComment;
+        projects[_id].numberOfComments++;
 
         return newComment;
     }
 
-    function investInCampaign(uint256 _id) public payable {
-        require(_id < numberOfCampaigns, "Campaign does not exist.");
-        Campaign storage campaign = campaigns[_id];
+    function investInProject(uint256 _id) public payable {
+        require(_id < numberOfProjects, "Project does not exist.");
+        Project storage project = projects[_id];
 
         uint256 amount = msg.value;
         uint256 tokenAmount = calculateTokenAmount(amount);
 
-        campaign.investors.push(msg.sender);
-        campaign.investments.push(amount);
+        project.investors.push(msg.sender);
+        project.investments.push(amount);
 
         numberOfInvestments += amount;
         numberOfInvestors++;
@@ -144,16 +144,16 @@ contract CrowdFunding {
         recentInvestments[nextInvestmentIndex] = RecenetInvestments({
             sender: msg.sender,
             amount: amount,
-            title: campaign.title
+            title: project.title
         });
 
         nextInvestmentIndex = (nextInvestmentIndex + 1) % 5;
 
-        (bool sent, ) = payable(campaign.owner).call{value: amount}("");
+        (bool sent, ) = payable(project.owner).call{value: amount}("");
 
         if (sent) {
-            campaign.token.transfer(msg.sender, tokenAmount);
-            campaign.amountCollected += amount;
+            project.token.transfer(msg.sender, tokenAmount);
+            project.amountCollected += amount;
         }
     }
 
@@ -167,41 +167,41 @@ contract CrowdFunding {
     function getInvestors(
         uint256 _id
     ) public view returns (address[] memory, uint256[] memory) {
-        return (campaigns[_id].investors, campaigns[_id].investments);
+        return (projects[_id].investors, projects[_id].investments);
     }
 
     function getNumberOfLikes(uint256 _id) public view returns (uint256) {
-        require(_id < numberOfCampaigns, "Campaign does not exist.");
-        return campaignLikes[_id].length;
+        require(_id < numberOfProjects, "Project does not exist.");
+        return projectLikes[_id].length;
     }
 
     function getAllComments(
         uint256 _id
     ) public view returns (Comment[] memory) {
         Comment[] memory commentsList = new Comment[](
-            campaigns[_id].numberOfComments
+            projects[_id].numberOfComments
         );
 
-        for (uint256 i = 0; i < campaigns[_id].numberOfComments; i++) {
-            Comment storage comment = campaignComments[_id][i];
+        for (uint256 i = 0; i < projects[_id].numberOfComments; i++) {
+            Comment storage comment = projectComments[_id][i];
             commentsList[i] = comment;
         }
 
         return (commentsList);
     }
 
-    function getCampaigns() public view returns (Campaign[] memory) {
-        Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns);
+    function getProjects() public view returns (Project[] memory) {
+        Project[] memory allProjects = new Project[](numberOfProjects);
 
-        for (uint i = 0; i < numberOfCampaigns; i++) {
-            Campaign storage item = campaigns[i];
-            allCampaigns[i] = item;
+        for (uint i = 0; i < numberOfProjects; i++) {
+            Project storage item = Projects[i];
+            allProjects[i] = item;
         }
 
-        return allCampaigns;
+        return allProjects;
     }
 
-    function getCampaignTokenData(
+    function getProjectTokenData(
         uint256 _id
     )
         public
@@ -210,8 +210,8 @@ contract CrowdFunding {
             string memory name,
             string memory symbol,
             uint256 totalSupply,
-            address campaignOwner,
-            uint256 campaignOwnerShare,
+            address projectOwner,
+            uint256 projectOwnerShare,
             address teamAddress,
             uint256 teamShare,
             address advisorAddress,
@@ -220,9 +220,9 @@ contract CrowdFunding {
             uint256 earlyInvestorsShare
         )
     {
-        require(_id < numberOfCampaigns, "Campaign does not exist");
+        require(_id < numberOfProjects, "Project does not exist");
 
-        ITokenData tokenContract = ITokenData(address(campaigns[_id].token));
+        ITokenData tokenContract = ITokenData(address(projects[_id].token));
         return tokenContract.tokenData();
     }
 
@@ -234,7 +234,7 @@ contract CrowdFunding {
         return (
             numberOfInvestments,
             numberOfInvestors,
-            numberOfCampaigns,
+            numberOfProjects,
             recentInvestments
         );
     }

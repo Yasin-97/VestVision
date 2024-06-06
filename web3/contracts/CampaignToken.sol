@@ -4,13 +4,13 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./ITokenData.sol";
 
-contract CampaignToken is ERC20, ITokenData {
-    address public _campaignOwner;
+contract ProjectToken is ERC20, ITokenData {
+    address public _projectOwner;
 
     string private _name;
     string private _symbol;
     uint256 private _totalSupply;
-    uint256 private _campaignOwnerShare;
+    uint256 private _projectOwnerShare;
     address private _teamAddress;
     uint256 private _teamShare;
     address private _advisorAddress;
@@ -22,7 +22,7 @@ contract CampaignToken is ERC20, ITokenData {
         string memory name,
         string memory symbol,
         uint256 totalSupply,
-        uint256 campaignOwnerShare,
+        uint256 projectOwnerShare,
         address teamAddress,
         uint256 teamShare,
         address advisorAddress,
@@ -31,7 +31,7 @@ contract CampaignToken is ERC20, ITokenData {
         uint256 earlyInvestorsShare
     ) ERC20(name, symbol) {
         require(
-            campaignOwnerShare +
+            projectOwnerShare +
                 teamShare +
                 advisorShare +
                 earlyInvestorsShare <=
@@ -39,12 +39,12 @@ contract CampaignToken is ERC20, ITokenData {
             "Total share exceeds 100%"
         );
 
-        // Set the campaign owner
-        _campaignOwner = msg.sender;
+        // Set the project owner
+        _projectOwner = msg.sender;
         _name = name;
         _symbol = symbol;
         _totalSupply = totalSupply;
-        _campaignOwnerShare = campaignOwnerShare;
+        _projectOwnerShare = projectOwnerShare;
         _teamAddress = teamAddress;
         _teamShare = teamShare;
         _advisorAddress = advisorAddress;
@@ -53,7 +53,7 @@ contract CampaignToken is ERC20, ITokenData {
         _earlyInvestorsShare = earlyInvestorsShare;
 
         // Calculate tokens for each party
-        uint256 ownerTokens = (totalSupply * campaignOwnerShare) / 100;
+        uint256 ownerTokens = (totalSupply * projectOwnerShare) / 100;
         uint256 teamTokens = (totalSupply * teamShare) / 100;
         uint256 advisorTokens = (totalSupply * advisorShare) / 100;
         uint256 reserveTokens = (totalSupply * earlyInvestorsShare) / 100;
@@ -63,7 +63,7 @@ contract CampaignToken is ERC20, ITokenData {
             (ownerTokens + teamTokens + advisorTokens + reserveTokens);
 
         // Mint tokens for each party
-        _mint(_campaignOwner, ownerTokens);
+        _mint(_projectOwner, ownerTokens);
         if (teamAddress != address(0) && teamShare > 0) {
             _mint(teamAddress, teamTokens);
         }
@@ -99,8 +99,8 @@ contract CampaignToken is ERC20, ITokenData {
             _name,
             _symbol,
             _totalSupply,
-            _campaignOwner,
-            _campaignOwnerShare,
+            _projectOwner,
+            _projectOwnerShare,
             _teamAddress,
             _teamShare,
             _advisorAddress,
