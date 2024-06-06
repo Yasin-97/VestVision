@@ -48,7 +48,7 @@ const RecentCampaigns = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (campaign: CampaignType) => {
-    navigate(`/dashboard/campaign-details/${campaign.title}`, {
+    navigate(`/dashboard/campaign-details/${campaign.pId}`, {
       state: campaign,
     });
   };

@@ -41,7 +41,7 @@ const Navbar = (props: Props) => {
           }}
         />
 
-        <Link to="/profile">
+        <Link to="/dashboard/profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img
               src={thirdweb}

@@ -20,6 +20,7 @@ export type CampaignType = {
   image: string;
   amountCollected?: string;
   owner?: string;
+  pId: number;
 };
 
 export type CampaignTokenType = {
