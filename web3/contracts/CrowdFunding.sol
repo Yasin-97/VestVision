@@ -26,6 +26,7 @@ contract CrowdFunding {
     }
 
     struct Comment {
+        uint256 projectId;
         address owner;
         string text;
     }
@@ -38,7 +39,7 @@ contract CrowdFunding {
 
     mapping(uint256 => Project) private projects;
     mapping(uint256 => Like[]) private projectLikes;
-    mapping(uint256 => mapping(uint256 => Comment)) private projectComments;
+    mapping(uint256 => Comment[]) private projectComments;
 
     uint256 private numberOfProjects = 0;
     uint256 private numberOfInvestments = 0;
@@ -121,11 +122,12 @@ contract CrowdFunding {
         uint256 _id,
         string memory _text
     ) public returns (Comment memory) {
-        Comment memory newComment = Comment({owner: msg.sender, text: _text});
-        projectComments[_id][projects[_id].numberOfComments] = newComment;
-        projects[_id].numberOfComments++;
-
-        return newComment;
+        Comment memory newComment = Comment({
+            projectId: _id,
+            owner: msg.sender,
+            text: _text
+        });
+        projectComments[_projectId].push(newComment);
     }
 
     function investInProject(uint256 _id) public payable {
@@ -173,19 +175,10 @@ contract CrowdFunding {
         return projectLikes[_id].length;
     }
 
-    function getAllComments(
+    function getProjectComments(
         uint256 _id
     ) public view returns (Comment[] memory) {
-        Comment[] memory commentsList = new Comment[](
-            projects[_id].numberOfComments
-        );
-
-        for (uint256 i = 0; i < projects[_id].numberOfComments; i++) {
-            Comment storage comment = projectComments[_id][i];
-            commentsList[i] = comment;
-        }
-
-        return (commentsList);
+        return projectComments[_id];
     }
 
     function getProjects() public view returns (Project[] memory) {
