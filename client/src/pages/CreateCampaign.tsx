@@ -42,15 +42,15 @@ const CreateCampaign = () => {
 
   const handleFormFieldChange = (
     fieldName: string,
-    e: ChangeEvent<HTMLInputElement> | string
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
   ) => {
     if (fieldName === "description") {
-      return setForm({ ...form, description: e as string });
+      return setForm((prevForm) => ({ ...prevForm, description: e as string }));
     }
-    setForm({
-      ...form,
+    setForm((prevForm) => ({
+      ...prevForm,
       [fieldName]: (e as ChangeEvent<HTMLInputElement>).target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -64,7 +64,7 @@ const CreateCampaign = () => {
         });
         const campaigns = await getCampaigns();
         setIsLoading(false);
-        // navigate(`/create-token/${campaigns.length - 1}`);
+        // navigate(`/dashboard/create-token/${campaigns.length - 1}`);
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });
@@ -112,9 +112,9 @@ const CreateCampaign = () => {
         </div>
 
         <FormField
-          labelName="Story *"
-          placeholder="Write your story"
-          isTextArea
+          labelName="Whitepaper *"
+          placeholder="Write project's whitepaper"
+          isTextEditor
           value={form.description}
           handleChange={(e) => handleFormFieldChange("description", e)}
         />
