@@ -58,7 +58,7 @@ contract CrowdFunding {
     ) public returns (uint256) {
         Project storage project = projects[numberOfProjects];
         require(
-            project.deadline < block.timestamp,
+            _deadline < block.timestamp,
             "The deadline should be a date in the future."
         );
 
