@@ -127,7 +127,7 @@ contract CrowdFunding {
             owner: msg.sender,
             text: _text
         });
-        projectComments[_projectId].push(newComment);
+        projectComments[_id].push(newComment);
     }
 
     function investInProject(uint256 _id) public payable {
