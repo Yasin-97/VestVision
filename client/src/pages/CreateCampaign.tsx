@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import { money } from "../assets";
 import { Button, FormField, Loader } from "../components";
-import { checkIfImage } from "../utils";
+import { checkIfImage } from "../lib/utils";
 import { CampaignType, useStateContext } from "../context";
 import SelectorInput from "../components/dashboard/SelectorInput";
 type formDataType = CampaignType & { name: string };

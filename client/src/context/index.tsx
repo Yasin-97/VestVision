@@ -8,7 +8,7 @@ import {
 } from "@thirdweb-dev/react";
 
 import { BigNumber, ethers } from "ethers";
-import { avatarColor } from "../utils";
+import { avatarColor } from "../lib/utils";
 
 export type CampaignType = {
   category: string;
