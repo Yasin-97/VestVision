@@ -90,6 +90,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: white;
 }
 
+.rich-text h3 strong,.rich-text h2 strong,.rich-text h1 strong{
+  color: white;
+
+}
+
+.rich-text strong{
+  color: white;
+
+}
+
 @media (min-width: 640px) {
   .rich-text h2 {
     font-size: 20px; /* Adjusted size for H2 at breakpoint */
