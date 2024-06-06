@@ -31,7 +31,7 @@ contract CrowdFunding {
     }
 
     struct RecentInvestments {
-        address sender;
+        address investor;
         uint256 amount;
         string title;
     }
@@ -142,19 +142,17 @@ contract CrowdFunding {
         numberOfInvestors++;
 
         recentInvestments[nextInvestmentIndex] = RecentInvestments({
-            sender: msg.sender,
+            investor: msg.sender,
             amount: amount,
             title: project.title
         });
 
         nextInvestmentIndex = (nextInvestmentIndex + 1) % 5;
 
-        (bool sent, ) = payable(project.owner).call{value: amount}("");
+        payable(project.owner).transfer(amount);
 
-        if (sent) {
-            project.token.transfer(msg.sender, tokenAmount);
-            project.amountCollected += amount;
-        }
+        project.token.transfer(msg.sender, tokenAmount);
+        project.amountCollected += amount;
     }
 
     function calculateTokenAmount(
