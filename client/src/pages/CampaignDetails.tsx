@@ -186,6 +186,9 @@ const CampaignDetails = () => {
 
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
+          <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#1DC071] pl-5">
+            {state.title}
+          </h1>
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
               Creator
