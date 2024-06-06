@@ -194,11 +194,18 @@ contract CrowdFunding {
         Project[] memory allProjects = new Project[](numberOfProjects);
 
         for (uint i = 0; i < numberOfProjects; i++) {
-            Project storage item = Projects[i];
+            Project storage item = projects[i];
             allProjects[i] = item;
         }
 
         return allProjects;
+    }
+
+    function getSingleProject(
+        uint256 _id
+    ) public view returns (Project memory) {
+        require(_id < numberOfProjects, "Project does not exist.");
+        return projects[_id];
     }
 
     function getProjectTokenData(
