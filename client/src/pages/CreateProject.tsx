@@ -10,11 +10,11 @@ import { ethers } from "ethers";
 import { money } from "../assets";
 import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../lib/utils";
-import { CampaignType, useStateContext } from "../context";
+import { ProjectType, useStateContext } from "../context";
 import SelectorInput from "../components/dashboard/SelectorInput";
-type formDataType = CampaignType & { name: string };
+type formDataType = ProjectType & { name: string };
 
-const campaignCategories = [
+const projectCategories = [
   { name: "AI" },
   { name: "IoT" },
   { name: "Edtech" },
@@ -26,8 +26,8 @@ const campaignCategories = [
   { name: "Blockchain" },
   { name: "Quantum Computing" },
 ];
-const CreateCampaign = () => {
-  const { createCampaign, getCampaigns } = useStateContext();
+const CreateProject = () => {
+  const { createProject, getProjects } = useStateContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState<formDataType>({
@@ -45,9 +45,12 @@ const CreateCampaign = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
   ) => {
     if (fieldName === "description") {
-      return setForm((prevForm) => ({ ...prevForm, description: e as string }));
+      return setForm((prevForm: ProjectType) => ({
+        ...prevForm,
+        description: e as string,
+      }));
     }
-    setForm((prevForm) => ({
+    setForm((prevForm: ProjectType) => ({
       ...prevForm,
       [fieldName]: (e as ChangeEvent<HTMLInputElement>).target.value,
     }));
@@ -58,13 +61,13 @@ const CreateCampaign = () => {
     checkIfImage(form.image, async (exists) => {
       if (exists) {
         setIsLoading(true);
-        await createCampaign({
+        await createProject({
           ...form,
           target: ethers.utils.parseUnits(form.target as string, 18),
         });
-        const campaigns = await getCampaigns();
+        const projects = await getProjects();
         setIsLoading(false);
-        // navigate(`/dashboard/create-token/${campaigns.length - 1}`);
+        // navigate(`/dashboard/create-token/${projects.length - 1}`);
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });
@@ -77,7 +80,7 @@ const CreateCampaign = () => {
       {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
-          Start a Campaign
+          Start a Project
         </h1>
       </div>
 
@@ -86,9 +89,9 @@ const CreateCampaign = () => {
         className="w-full mt-[65px] flex flex-col gap-[30px]"
       >
         <SelectorInput
-          placeholderText="Select Campaign Category"
+          placeholderText="Select Project Category"
           labelName="Category"
-          options={campaignCategories}
+          options={projectCategories}
           selectCallback={(selected) =>
             setForm({ ...form, category: selected })
           }
@@ -103,7 +106,7 @@ const CreateCampaign = () => {
             handleChange={(e) => handleFormFieldChange("name", e)}
           />
           <FormField
-            labelName="Campaign Title *"
+            labelName="Project Title *"
             placeholder="Write a title"
             inputType="text"
             value={form.title}
@@ -148,8 +151,8 @@ const CreateCampaign = () => {
         </div>
 
         <FormField
-          labelName="Campaign image *"
-          placeholder="Place image URL of your campaign"
+          labelName="Project image *"
+          placeholder="Place image URL of your project"
           inputType="url"
           value={form.image}
           handleChange={(e) => handleFormFieldChange("image", e)}
@@ -158,7 +161,7 @@ const CreateCampaign = () => {
         <div className="flex justify-center items-center mt-[40px]">
           <Button
             btnType="submit"
-            title="Submit new campaign"
+            title="Submit new project"
             styles="bg-[#1dc071]"
           />
         </div>
@@ -167,4 +170,4 @@ const CreateCampaign = () => {
   );
 };
 
-export default CreateCampaign;
+export default CreateProject;

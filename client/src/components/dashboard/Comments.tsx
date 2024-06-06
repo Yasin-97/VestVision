@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import { loader } from "../../assets";
 
 type CommentsType = {
-  campaignId: number;
+  projectId: number;
 };
 
-const Comments = ({ campaignId }: CommentsType) => {
+const Comments = ({ projectId }: CommentsType) => {
   const { getComments, addComment, contract, address } = useStateContext();
 
-  const [campaignComments, setCampaignComments] = useState<CommentType[]>([]);
+  const [projectComments, setProjectComments] = useState<CommentType[]>([]);
 
   const [isFetchCommentsLoading, setIsFetchCommentsLoading] = useState(false);
   const [isAddCommentLoading, setIsAddCommentLoading] = useState(false);
@@ -23,9 +23,9 @@ const Comments = ({ campaignId }: CommentsType) => {
   const fetchComments = async () => {
     try {
       setIsFetchCommentsLoading(true);
-      const allComments = await getComments(campaignId);
+      const allComments = await getComments(projectId);
 
-      setCampaignComments(allComments);
+      setProjectComments(allComments);
       setIsFetchCommentsLoading(false);
     } catch (error) {
       console.log(error);
@@ -39,7 +39,7 @@ const Comments = ({ campaignId }: CommentsType) => {
   const handleAddComment = async () => {
     try {
       setIsAddCommentLoading(true);
-      await addComment(campaignId, comment);
+      await addComment(projectId, comment);
       setComment("");
       setIsAddCommentLoading(false);
       fetchComments();
@@ -58,7 +58,7 @@ const Comments = ({ campaignId }: CommentsType) => {
           People's thought on it
         </p>
         <div className="flex flex-col gap-1 max-h-[500px] overflow-auto">
-          {!isFetchCommentsLoading && !campaignComments.length && (
+          {!isFetchCommentsLoading && !projectComments.length && (
             <div className="flex flex-col items-center h-[300px] justify-center ">
               <BsFileEarmarkSpreadsheet className="text-[#808191] text-4xl mb-6" />
               <p className=" mb-5 font-epilogue fount-medium text-[16px] leading-[30px] text-[#808191]">
@@ -75,8 +75,8 @@ const Comments = ({ campaignId }: CommentsType) => {
           )}
 
           {!isFetchCommentsLoading &&
-            campaignComments &&
-            campaignComments.map(
+            projectComments &&
+            projectComments.map(
               ({ owner, text, firstColor, secondColor, dir, isInvestor }) => (
                 <SingleComment
                   isInvestor={isInvestor}

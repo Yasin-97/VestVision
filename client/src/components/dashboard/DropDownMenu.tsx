@@ -3,14 +3,14 @@ import { motion } from "framer-motion";
 interface DropDownMenuProps {
   onClose: () => void;
   scrollToHome: () => void;
-  scrollToRecentCampaigns: () => void;
+  scrollToRecentProjects: () => void;
   scrollToFeatures: () => void;
   scrollToFAQ: () => void;
 }
 
 const DropDownMenu: React.FC<DropDownMenuProps> = ({
   onClose,
-  scrollToRecentCampaigns,
+  scrollToRecentProjects,
   scrollToFeatures,
   scrollToFAQ,
 }) => {
@@ -45,12 +45,12 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
     >
       <div className="flex-col flex space-y-10">
         <div
-          onClick={() => navItemHandler(scrollToRecentCampaigns)}
+          onClick={() => navItemHandler(scrollToRecentProjects)}
           className="cursor-pointer bg-clip-text text-transparent 
           bg-gradient-to-b from-neutral-50
            to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#77d9aaa8] px-2 transition-all"
         >
-          Recent Campaigns
+          Recent Projects
         </div>
 
         <div

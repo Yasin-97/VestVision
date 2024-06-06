@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { CampaignTokenType, useStateContext } from "../context";
+import { ProjectTokenType, useStateContext } from "../context";
 import { CountBox, Button, Loader, Comments } from "../components";
 import { avatarColor, calculateBarPercentage, daysLeft } from "../lib/utils";
 import defaultImg from "../../public/images/templates-preview.png";
@@ -17,17 +17,17 @@ import Tokenomic from "../components/dashboard/Tokenomic";
 import { SiEthereum } from "react-icons/si";
 const { firstColor, secondColor, dir } = avatarColor();
 
-const CampaignDetails = () => {
+const ProjectDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const {
     getNumberOfLikes,
     invest,
     getInvesments,
-    getCampaignTokenData,
+    getProjectTokenData,
     contract,
     address,
-    likeCampaign,
+    likeProject,
   } = useStateContext();
 
   const [isLoading, setIsLoading] = useState({
@@ -37,7 +37,7 @@ const CampaignDetails = () => {
     investors: true,
   });
   const [amount, setAmount] = useState("");
-  const [tokenData, setTokenData] = useState<CampaignTokenType>();
+  const [tokenData, setTokenData] = useState<ProjectTokenType>();
   const [investors, setInvestors] = useState<
     { investor: string; investment: string }[]
   >([]);
@@ -58,14 +58,14 @@ const CampaignDetails = () => {
   const fetchTokenData = async () => {
     setIsLoading({ ...isLoading, tokenData: true });
 
-    const data = await getCampaignTokenData(state.pId);
+    const data = await getProjectTokenData(state.pId);
 
     if (data) setTokenData(data);
 
     setIsLoading({ ...isLoading, tokenData: false });
   };
-  const likeCampaignHandler = async () => {
-    await likeCampaign(state.pId);
+  const likeProjectHandler = async () => {
+    await likeProject(state.pId);
     await fetchLikesCount();
   };
 
@@ -137,7 +137,7 @@ const CampaignDetails = () => {
           <div className="flex-1 flex-col relative">
             <img
               src={state?.image || defaultImg}
-              alt="campaign"
+              alt="project"
               className="w-full h-[410px] object-cover rounded-xl "
             />
             <div className=" p-2 flex gap-1 items-center absolute bottom-5 left-2 bg-[#13131a] rounded-xl">
@@ -148,7 +148,7 @@ const CampaignDetails = () => {
               <BiSolidLike
                 onClick={(e) => {
                   handleConfetti(e);
-                  likeCampaignHandler();
+                  likeProjectHandler();
                 }}
                 className={`text-3xl text-white transition-all hover:text-green-400 ${
                   isLiked && "!text-green-400"
@@ -180,7 +180,7 @@ const CampaignDetails = () => {
         </div>
         <Tokenomic
           isLoading={isLoading.tokenData}
-          tokenData={tokenData as CampaignTokenType}
+          tokenData={tokenData as ProjectTokenType}
         />
       </div>
 
@@ -206,7 +206,7 @@ const CampaignDetails = () => {
                   {state?.owner}
                 </h4>
                 <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
-                  10 Campaigns
+                  10 Projects
                 </p>
               </div>
             </div>
@@ -228,7 +228,7 @@ const CampaignDetails = () => {
         <div className="gap-10 self-start flex-1 mt-[20px] md:mt-0 flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
           <div>
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] lg:text-center text-[#808191]">
-              Fund the campaign
+              Fund the project
             </p>
             <div className="mt-[30px]">
               <input
@@ -252,7 +252,7 @@ const CampaignDetails = () => {
 
               <Button
                 btnType="button"
-                title="Fund Campaign"
+                title="Fund Project"
                 styles="w-full bg-[#8c6dfd]"
                 handleClick={handleInvestment}
               />
@@ -296,9 +296,9 @@ const CampaignDetails = () => {
           </div>
         </div>
       </div>
-      <Comments campaignId={state?.pId} />
+      <Comments projectId={state?.pId} />
     </div>
   );
 };
 
-export default CampaignDetails;
+export default ProjectDetails;

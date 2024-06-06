@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import LandingNavbar from "../components/LandingNavbar";
 import { HeroHighlight } from "../components/HeroHighlight";
-import RecentCampaigns from "../components/landing/RecentCampaigns";
+import RecentProjects from "../components/landing/RecentProjects";
 import Features from "../components/landing/Features";
 import FAQs from "../components/landing/FAQs";
 import Hero from "../components/landing/Hero";
@@ -10,7 +10,7 @@ type Props = {};
 
 const Landing = (props: Props) => {
   const homeRef = useRef<HTMLDivElement>(null);
-  const recentCampaignsRef = useRef<HTMLDivElement>(null);
+  const recentProjectsRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const FAQRef = useRef<HTMLDivElement>(null);
 
@@ -22,8 +22,8 @@ const Landing = (props: Props) => {
     });
   };
 
-  const scrollToRecentCampaigns = () => {
-    recentCampaignsRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToRecentProjects = () => {
+    recentProjectsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToFeatures = () => {
@@ -42,14 +42,14 @@ const Landing = (props: Props) => {
       >
         <LandingNavbar
           scrollToHome={scrollToHome}
-          scrollToRecentCampaigns={scrollToRecentCampaigns}
+          scrollToRecentProjects={scrollToRecentProjects}
           scrollToFeatures={scrollToFeatures}
           scrollToFAQ={scrollToFAQ}
         />
         <Hero />
       </HeroHighlight>
-      <div ref={recentCampaignsRef}>
-        <RecentCampaigns />
+      <div ref={recentProjectsRef}>
+        <RecentProjects />
         <LandingStats />
       </div>
       <div ref={featuresRef}>

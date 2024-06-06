@@ -1,20 +1,20 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, FormField, Loader } from "../components";
-import { CampaignTokenType, useStateContext } from "../context";
+import { ProjectTokenType, useStateContext } from "../context";
 
-type formDataType = CampaignTokenType;
-const CreateCampaign = () => {
-  const { createTokenForCampaign } = useStateContext();
+type formDataType = ProjectTokenType;
+const CreateProject = () => {
+  const { createTokenForProject } = useStateContext();
   const navigate = useNavigate();
-  let { campaignId } = useParams();
+  let { projectId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState<formDataType>({
     name: "",
     symbol: "",
     totalSupply: 0,
-    campaignOwnerShare: 0,
+    projectOwnerShare: 0,
     teamAddress: "",
     teamShare: 0,
     advisorAddress: "",
@@ -26,9 +26,9 @@ const CreateCampaign = () => {
     () =>
       setForm({
         ...form,
-        campaignId: Number(campaignId),
+        projectId: Number(projectId),
       }),
-    [campaignId]
+    [projectId]
   );
 
   const handleFormFieldChange = (
@@ -41,13 +41,13 @@ const CreateCampaign = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
-      form.campaignId !== undefined &&
+      form.projectId !== undefined &&
       form.name !== "" &&
       form.symbol !== "" &&
       form.totalSupply > 0
     ) {
       setIsLoading(true);
-      await createTokenForCampaign(form);
+      await createTokenForProject(form);
       setIsLoading(false);
       navigate("/");
     } else {
@@ -60,7 +60,7 @@ const CreateCampaign = () => {
       {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
-          Campaign's Token
+          Project's Token
         </h1>
       </div>
 
@@ -116,11 +116,11 @@ const CreateCampaign = () => {
         </div>
         <FormField
           labelName="Owner Share (default to 0)"
-          placeholder="Wallet Address Of Campaign owner"
+          placeholder="Wallet Address Of Project owner"
           inputType="text"
-          value={form.campaignOwnerShare}
+          value={form.projectOwnerShare}
           handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFormFieldChange("campaignOwnerShare", e)
+            handleFormFieldChange("projectOwnerShare", e)
           }
         />
         <div className="flex flex-wrap gap-[40px]">
@@ -187,7 +187,7 @@ const CreateCampaign = () => {
         <div className="flex justify-center items-center mt-[40px]">
           <Button
             btnType="submit"
-            title="Create campaign Token"
+            title="Create project Token"
             styles="bg-[#1dc071]"
           />
         </div>
@@ -196,4 +196,4 @@ const CreateCampaign = () => {
   );
 };
 
-export default CreateCampaign;
+export default CreateProject;

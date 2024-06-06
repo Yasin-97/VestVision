@@ -1,9 +1,9 @@
-import { CampaignTokenType } from "../../context";
+import { ProjectTokenType } from "../../context";
 import { loader } from "../../assets";
 
 type TokenomicProps = {
   isLoading: boolean;
-  tokenData: CampaignTokenType;
+  tokenData: ProjectTokenType;
 };
 
 const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
@@ -54,7 +54,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Owner Share
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.campaignOwnerShare || "-"} %
+                    {tokenData?.projectOwnerShare || "-"} %
                   </span>
                 </div>
                 <div className="flex flex-col gap-1">

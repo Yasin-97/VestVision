@@ -3,30 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import FundCard from "./FundCard";
 import { loader } from "../../assets";
-import { CampaignType } from "../../context";
+import { ProjectType } from "../../context";
 
-type DisplayCampaignType = {
+type DisplayProjectType = {
   title: string;
   isLoading: boolean;
-  campaigns: CampaignType[];
+  projects: ProjectType[];
 };
-const DisplayCampaigns = ({
+const DisplayProjects = ({
   title,
   isLoading,
-  campaigns,
-}: DisplayCampaignType) => {
+  projects,
+}: DisplayProjectType) => {
   const navigate = useNavigate();
 
-  const handleNavigate = (campaign: CampaignType) => {
-    navigate(`/dashboard/campaign-details/${campaign.pId}`, {
-      state: campaign,
+  const handleNavigate = (project: ProjectType) => {
+    navigate(`/dashboard/project-details/${project.pId}`, {
+      state: project,
     });
   };
 
   return (
     <div>
       <h1 className="font-epilogue font-semibold text-[18px] text-white text-left">
-        {title} ({campaigns.length})
+        {title} ({projects.length})
       </h1>
 
       <div className="flex flex-wrap mt-[20px] gap-[26px]">
@@ -38,19 +38,19 @@ const DisplayCampaigns = ({
           />
         )}
 
-        {!isLoading && campaigns.length === 0 && (
+        {!isLoading && projects.length === 0 && (
           <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
             You have not created any campigns yet
           </p>
         )}
 
         {!isLoading &&
-          campaigns.length > 0 &&
-          campaigns.map((campaign) => (
+          projects.length > 0 &&
+          projects.map((project) => (
             <FundCard
               key={uuidv4()}
-              {...campaign}
-              handleClick={() => handleNavigate(campaign)}
+              {...project}
+              handleClick={() => handleNavigate(project)}
             />
           ))}
       </div>
@@ -58,4 +58,4 @@ const DisplayCampaigns = ({
   );
 };
 
-export default DisplayCampaigns;
+export default DisplayProjects;

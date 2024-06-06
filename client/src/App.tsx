@@ -1,10 +1,7 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
-
-import { Sidebar, Navbar } from "./components";
 import {
-  CampaignDetails,
-  CreateCampaign,
+  ProjectDetails,
+  CreateProject,
   CreateToken,
   Home,
   Profile,
@@ -34,15 +31,15 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard/create-campaign"
+          path="/dashboard/create-project"
           element={
             <DashboardRoute>
-              <CreateCampaign />
+              <CreateProject />
             </DashboardRoute>
           }
         />
         <Route
-          path="/dashboard/create-token/:campaignId"
+          path="/dashboard/create-token/:projectId"
           element={
             <DashboardRoute>
               <CreateToken />
@@ -50,10 +47,10 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard/campaign-details/:id"
+          path="/dashboard/project-details/:id"
           element={
             <DashboardRoute>
-              <CampaignDetails />
+              <ProjectDetails />
             </DashboardRoute>
           }
         />

@@ -10,14 +10,14 @@ import Button from "./dashboard/Button";
 
 type NavbarProps = {
   scrollToHome: () => void;
-  scrollToRecentCampaigns: () => void;
+  scrollToRecentProjects: () => void;
   scrollToFeatures: () => void;
   scrollToFAQ: () => void;
 };
 
 const LandingNavbar = ({
   scrollToHome,
-  scrollToRecentCampaigns,
+  scrollToRecentProjects,
   scrollToFeatures,
   scrollToFAQ,
 }: NavbarProps) => {
@@ -62,8 +62,8 @@ const LandingNavbar = ({
         <div onClick={scrollToHome} className="hover:text-gray-50">
           Home
         </div>
-        <div onClick={scrollToRecentCampaigns} className="hover:text-gray-50">
-          Recent Campaigns
+        <div onClick={scrollToRecentProjects} className="hover:text-gray-50">
+          Recent Projects
         </div>
 
         <div onClick={scrollToFeatures} className="hover:text-gray-50">
@@ -80,7 +80,7 @@ const LandingNavbar = ({
             <X onClick={closeDropDown} />
             <DropDownMenu
               scrollToHome={scrollToHome}
-              scrollToRecentCampaigns={scrollToRecentCampaigns}
+              scrollToRecentProjects={scrollToRecentProjects}
               scrollToFeatures={scrollToFeatures}
               scrollToFAQ={scrollToFAQ}
               onClose={closeDropDown}

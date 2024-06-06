@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-import { DisplayCampaigns } from "../components";
-import { CampaignType, useStateContext } from "../context";
+import { DisplayProjects } from "../components";
+import { ProjectType, useStateContext } from "../context";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [campaigns, setCampaigns] = useState<CampaignType[]>([]);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
 
-  const { address, contract, getCampaigns } = useStateContext();
+  const { address, contract, getProjects } = useStateContext();
 
-  const fetchCampaigns = async () => {
+  const fetchProjects = async () => {
     setIsLoading(true);
-    const data = await getCampaigns();
-    setCampaigns(data);
+    const data = await getProjects();
+    setProjects(data);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (contract) fetchCampaigns();
+    if (contract) fetchProjects();
   }, [address, contract]);
 
   return (
-    <DisplayCampaigns
-      title="All Campaigns"
+    <DisplayProjects
+      title="All Projects"
       isLoading={isLoading}
-      campaigns={campaigns}
+      projects={projects}
     />
   );
 };

@@ -4,6 +4,6 @@ export { default as Button } from "./dashboard/Button";
 export { default as Loader } from "./dashboard/Loader";
 export { default as FormField } from "./dashboard/FormField";
 export { default as CountBox } from "./dashboard/CountBox";
-export { default as DisplayCampaigns } from "./dashboard/DisplayCampaigns";
+export { default as DisplayProjects } from "./dashboard/DisplayProjects";
 export { default as Comments } from "./dashboard/Comments";
 export { default as SingleComment } from "./dashboard/SingleComment";

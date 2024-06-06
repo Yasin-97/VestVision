@@ -1,31 +1,31 @@
 import { CardBody, CardContainer, CardItem } from "./3DCard";
-import { CampaignType } from "../../context";
+import { ProjectType } from "../../context";
 import { MdVerifiedUser } from "react-icons/md";
 type FundCardType = {
-  campaign: CampaignType;
-  clickHandler: <T extends CampaignType>(arg: T) => void;
+  project: ProjectType;
+  clickHandler: <T extends ProjectType>(arg: T) => void;
 };
-export function FundCard({ campaign, clickHandler }: FundCardType) {
+export function FundCard({ project, clickHandler }: FundCardType) {
   return (
     <CardContainer
-      onClick={() => clickHandler(campaign)}
+      onClick={() => clickHandler(project)}
       className=" inter-var"
       containerClassName=" w-[340px] lg:w-[390px]"
     >
       <CardBody className="bg-[#1c1c24] relative hover:shadow-2xl hover:shadow-emerald-500/[0.1] w-auto h-auto rounded-t-xl p-6 border-b-4 border-[#808191]">
         <CardItem translateZ="50" className="text-xl font-bold text-white">
-          {campaign.title}
+          {project.title}
         </CardItem>
         <CardItem
           as="p"
           translateZ="60"
           className=" text-sm font-semibold mt-2 text-[#808191] line-clamp-3"
         >
-          <span dangerouslySetInnerHTML={{ __html: campaign.description }} />
+          <span dangerouslySetInnerHTML={{ __html: project.description }} />
         </CardItem>
         <CardItem translateZ="100" className="w-full mt-4">
           <img
-            src={campaign.image}
+            src={project.image}
             height="1000"
             width="1000"
             className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
@@ -39,7 +39,7 @@ export function FundCard({ campaign, clickHandler }: FundCardType) {
               as="button"
               className=" ml-1 font-epilogue font-semibold text-2xl text-white leading-[22px]"
             >
-              {campaign.amountCollected}
+              {project.amountCollected}
             </CardItem>
             <CardItem
               translateZ={20}

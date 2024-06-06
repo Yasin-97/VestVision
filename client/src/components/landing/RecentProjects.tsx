@@ -2,27 +2,27 @@
 
 import { motion } from "framer-motion";
 import { FundCard } from "./FundCard";
-import { CampaignType, useStateContext } from "../../context";
+import { ProjectType, useStateContext } from "../../context";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loader } from "../../assets";
 
-const RecentCampaigns = () => {
-  const { address, contract, getCampaigns, getInvestmentSummary } =
+const RecentProjects = () => {
+  const { address, contract, getProjects, getInvestmentSummary } =
     useStateContext();
   const [isLoading, setIsLoading] = useState({
-    campaigns: true,
+    projects: true,
     investmentSummary: true,
   });
-  const [campaigns, setCampaigns] = useState<CampaignType[]>([]);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
   const [investmentSummary, setInvestmentSummary] = useState<any>([]);
 
-  const fetchCampaigns = async () => {
-    setIsLoading((loadingState) => ({ ...loadingState, campaigns: true }));
+  const fetchProjects = async () => {
+    setIsLoading((loadingState) => ({ ...loadingState, projects: true }));
 
-    const data = await getCampaigns();
-    setCampaigns(data.slice(0, 4));
-    setIsLoading((loadingState) => ({ ...loadingState, campaigns: false }));
+    const data = await getProjects();
+    setProjects(data.slice(0, 4));
+    setIsLoading((loadingState) => ({ ...loadingState, projects: false }));
   };
 
   const fetchInvestmentSummary = async () => {
@@ -40,16 +40,16 @@ const RecentCampaigns = () => {
 
   useEffect(() => {
     if (contract) {
-      fetchCampaigns();
+      fetchProjects();
       fetchInvestmentSummary();
     }
   }, [address, contract]);
 
   const navigate = useNavigate();
 
-  const handleNavigate = (campaign: CampaignType) => {
-    navigate(`/dashboard/campaign-details/${campaign.pId}`, {
-      state: campaign,
+  const handleNavigate = (project: ProjectType) => {
+    navigate(`/dashboard/Project-details/${project.pId}`, {
+      state: project,
     });
   };
 
@@ -63,7 +63,7 @@ const RecentCampaigns = () => {
         Explore the Latest Tech Ventures Seeking Your Support
       </p>
       <div className="items-center md:flex justify-center md:mx-auto md:space-x-10">
-        {isLoading.campaigns && (
+        {isLoading.projects && (
           <div className="w-full flex justify-center items-center min-h-[50vh]">
             <img
               src={loader}
@@ -72,14 +72,14 @@ const RecentCampaigns = () => {
             />
           </div>
         )}
-        {!isLoading.campaigns && (
+        {!isLoading.projects && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="flex gap-5 flex-wrap justify-center max-w-[1024px]"
           >
-            {campaigns.map((campaign) => (
-              <FundCard clickHandler={handleNavigate} campaign={campaign} />
+            {projects.map((project) => (
+              <FundCard clickHandler={handleNavigate} project={project} />
             ))}
           </motion.div>
         )}
@@ -88,4 +88,4 @@ const RecentCampaigns = () => {
   );
 };
 
-export default RecentCampaigns;
+export default RecentProjects;

@@ -10,7 +10,7 @@ import {
 import { BigNumber, ethers } from "ethers";
 import { avatarColor } from "../lib/utils";
 
-export type CampaignType = {
+export type ProjectType = {
   category: string;
   address?: string;
   title: string;
@@ -23,12 +23,12 @@ export type CampaignType = {
   pId: number;
 };
 
-export type CampaignTokenType = {
-  campaignId?: number;
+export type ProjectTokenType = {
+  projectId?: number;
   name: string;
   symbol: string;
   totalSupply: number;
-  campaignOwnerShare: number;
+  projectOwnerShare: number;
   teamAddress: string;
   teamShare: number;
   advisorAddress: string;
@@ -50,17 +50,17 @@ type contextType = {
   address?: string;
   connect: any;
   contract: any;
-  createCampaign: (campaign: CampaignType) => Promise<void>;
-  createTokenForCampaign: (campaignToken: CampaignTokenType) => Promise<void>;
-  getUserCampaigns: () => Promise<CampaignType[]>;
-  getCampaignTokenData: (pId: number) => Promise<CampaignTokenType | undefined>;
-  getCampaigns: () => Promise<CampaignType[]>;
-  invest: (pId: number, amount: string) => Promise<CampaignType>;
+  createProject: (project: ProjectType) => Promise<void>;
+  createTokenForProject: (projectToken: ProjectTokenType) => Promise<void>;
+  getUserProjects: () => Promise<ProjectType[]>;
+  getProjectTokenData: (pId: number) => Promise<ProjectTokenType | undefined>;
+  getProjects: () => Promise<ProjectType[]>;
+  invest: (pId: number, amount: string) => Promise<ProjectType>;
   getInvesments: (
     pId: number
   ) => Promise<{ investor: string; investment: string }[]>;
   addComment: (pId: number, text: string) => Promise<void>;
-  likeCampaign: (pId: number) => Promise<void>;
+  likeProject: (pId: number) => Promise<void>;
   getComments: (pId: number) => Promise<CommentType[]>;
   getNumberOfLikes: (pId: number) => Promise<string>;
   getInvestmentSummary: () => Promise<string>;
@@ -71,20 +71,20 @@ const StateContext = createContext<contextType>({
   address: "",
   connect: null,
   contract: null,
-  createCampaign: async () => {
-    throw new Error("createCampaign function not implemented");
+  createProject: async () => {
+    throw new Error("createProject function not implemented");
   },
-  createTokenForCampaign: async () => {
-    throw new Error("createTokenForCampaign function not implemented");
+  createTokenForProject: async () => {
+    throw new Error("createTokenForProject function not implemented");
   },
-  getUserCampaigns: async () => {
-    throw new Error("getUserCampaigns function not implemented");
+  getUserProjects: async () => {
+    throw new Error("getUserProjects function not implemented");
   },
-  getCampaignTokenData: async () => {
-    throw new Error("getCampaignTokenData function not implemented");
+  getProjectTokenData: async () => {
+    throw new Error("getProjectTokenData function not implemented");
   },
-  getCampaigns: async () => {
-    throw new Error("getCampaign function not implemented");
+  getProjects: async () => {
+    throw new Error("getProject function not implemented");
   },
   invest: async (pId, amount) => {
     throw new Error("invest function not implemented");
@@ -95,8 +95,8 @@ const StateContext = createContext<contextType>({
   addComment: async (pId, text) => {
     throw new Error("addComment function not implemented");
   },
-  likeCampaign: async (pId) => {
-    throw new Error("likeCampaign function not implemented");
+  likeProject: async (pId) => {
+    throw new Error("likeProject function not implemented");
   },
   getComments: async (pId) => {
     throw new Error("getComments function not implemented");
@@ -115,29 +115,29 @@ export const StateContextProvider = ({
     "0x2975B01B19604fCAf76aC5f8ccDB69A9b7b6877e"
   );
 
-  const { mutateAsync: createCampaign } = useContractWrite(
+  const { mutateAsync: createProject } = useContractWrite(
     contract,
-    "createCampaign"
+    "createProject"
   );
-  const { mutateAsync: createTokenForCampaign } = useContractWrite(
+  const { mutateAsync: createTokenForProject } = useContractWrite(
     contract,
-    "createTokenForCampaign"
+    "createTokenForProject"
   );
 
   const address = useAddress();
   const connect = useMetamask();
 
-  const publishCampaign = async (campaign: CampaignType) => {
+  const publishProject = async (project: ProjectType) => {
     try {
-      const data = await createCampaign({
+      const data = await createProject({
         args: [
           address,
-          campaign.title,
-          campaign.category,
-          campaign.description,
-          campaign.target,
-          new Date(campaign.deadline as string).getTime(),
-          campaign.image,
+          project.title,
+          project.category,
+          project.description,
+          project.target,
+          new Date(project.deadline as string).getTime(),
+          project.image,
         ],
       });
       console.log("contract call success", data);
@@ -146,21 +146,21 @@ export const StateContextProvider = ({
     }
   };
 
-  const mintTokenForCampaign = async (campaignToken: CampaignTokenType) => {
+  const mintTokenForProject = async (projectToken: ProjectTokenType) => {
     try {
-      const data = await createTokenForCampaign({
+      const data = await createTokenForProject({
         args: [
-          campaignToken.campaignId,
-          campaignToken.name,
-          campaignToken.symbol,
-          campaignToken.totalSupply,
-          campaignToken.campaignOwnerShare,
-          campaignToken.teamAddress,
-          campaignToken.teamShare,
-          campaignToken.advisorAddress,
-          campaignToken.advisorShare,
-          campaignToken.earlyInvestorsAddress,
-          campaignToken.earlyInvestorsShare,
+          projectToken.projectId,
+          projectToken.name,
+          projectToken.symbol,
+          projectToken.totalSupply,
+          projectToken.projectOwnerShare,
+          projectToken.teamAddress,
+          projectToken.teamShare,
+          projectToken.advisorAddress,
+          projectToken.advisorShare,
+          projectToken.earlyInvestorsAddress,
+          projectToken.earlyInvestorsShare,
         ],
       });
       console.log("contract call success", data);
@@ -170,7 +170,7 @@ export const StateContextProvider = ({
   };
 
   const invest = async (pId: number, amount: string) => {
-    const data = await contract?.call("investInCampaign", [pId], {
+    const data = await contract?.call("investInProject", [pId], {
       value: ethers.utils.parseEther(amount),
     });
 
@@ -187,31 +187,29 @@ export const StateContextProvider = ({
     }
   };
 
-  const likeCampaign = async (pId: number) => {
+  const likeProject = async (pId: number) => {
     try {
-      console.log("the campaign id", pId);
-
-      const data = await contract?.call("likeCampaign", [pId]);
+      const data = await contract?.call("likeProject", [pId]);
       console.log("contract call success", data);
     } catch (error) {
       console.log("contract call failure", error);
     }
   };
 
-  const getCampaigns = async () => {
-    const campaigns: CampaignType[] = await contract?.call("getCampaigns");
+  const getProjects = async () => {
+    const projects: ProjectType[] = await contract?.call("getProjects");
 
-    const parsedCampaings = campaigns.map((campaign, i) => ({
-      owner: campaign.owner,
-      title: campaign.title,
-      category: campaign.category,
-      description: campaign.description,
-      target: ethers.utils.formatEther(campaign.target.toString()),
-      deadline: (campaign.deadline as BigNumber).toNumber(),
+    const parsedCampaings = projects.map((project, i) => ({
+      owner: project.owner,
+      title: project.title,
+      category: project.category,
+      description: project.description,
+      target: ethers.utils.formatEther(project.target.toString()),
+      deadline: (project.deadline as BigNumber).toNumber(),
       amountCollected: ethers.utils.formatEther(
-        (campaign.amountCollected as string).toString()
+        (project.amountCollected as string).toString()
       ),
-      image: campaign.image,
+      image: project.image,
       pId: i,
     }));
 
@@ -271,15 +269,15 @@ export const StateContextProvider = ({
     return parsedInvestments;
   };
 
-  const getCampaignTokenData = async (pId: number) => {
+  const getProjectTokenData = async (pId: number) => {
     try {
-      const rawTokenData = await contract?.call("getCampaignTokenData", [pId]);
+      const rawTokenData = await contract?.call("getProjectTokenData", [pId]);
 
-      const parsedTokenData: CampaignTokenType = {
+      const parsedTokenData: ProjectTokenType = {
         name: rawTokenData?.name,
         symbol: rawTokenData?.symbol,
         totalSupply: parseInt(rawTokenData?.totalSupply._hex, 16),
-        campaignOwnerShare: parseInt(rawTokenData?.campaignOwnerShare._hex, 16),
+        projectOwnerShare: parseInt(rawTokenData?.projectOwnerShare._hex, 16),
         teamAddress: rawTokenData?.teamAddress,
         teamShare: parseInt(rawTokenData?.teamShare._hex, 16),
         advisorAddress: rawTokenData?.advisorAddress,
@@ -294,18 +292,18 @@ export const StateContextProvider = ({
       return parsedTokenData;
     } catch (error) {
       if (error.message.includes("call revert exception")) {
-        console.log("This campaign does not have its own token!");
+        console.log("This project does not have its own token!");
       }
     }
   };
 
-  const getUserCampaigns = async () => {
-    const allCampaigns = await getCampaigns();
-    const filteredCampaigns = allCampaigns.filter(
-      (campaign) => campaign.owner === address
+  const getUserProjects = async () => {
+    const allProjects = await getProjects();
+    const filteredProjects = allProjects.filter(
+      (project) => project.owner === address
     );
 
-    return filteredCampaigns;
+    return filteredProjects;
   };
 
   return (
@@ -317,15 +315,15 @@ export const StateContextProvider = ({
         contract,
         addComment,
         getComments,
-        getCampaigns,
-        likeCampaign,
+        getProjects,
+        likeProject,
         getInvesments,
-        getUserCampaigns,
+        getUserProjects,
         getNumberOfLikes,
         getInvestmentSummary,
-        getCampaignTokenData,
-        createCampaign: publishCampaign,
-        createTokenForCampaign: mintTokenForCampaign,
+        getProjectTokenData,
+        createProject: publishProject,
+        createTokenForProject: mintTokenForProject,
       }}
     >
       {children}
