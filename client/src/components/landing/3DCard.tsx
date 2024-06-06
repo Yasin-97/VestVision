@@ -15,10 +15,12 @@ export const CardContainer = ({
   children,
   className,
   containerClassName,
+  onClick,
 }: {
   children?: React.ReactNode;
   className?: string;
   containerClassName?: string;
+  onClick?: <T>(arg: T) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMouseEntered, setIsMouseEntered] = useState(false);
@@ -46,7 +48,7 @@ export const CardContainer = ({
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
         className={cn(" items-center justify-center", containerClassName)}
-        onClick={() => console.log("ehello nnow")}
+        onClick={onClick}
         style={{
           perspective: "1000px",
         }}

@@ -5,20 +5,25 @@ import { Toolbar } from "./Toolbar";
 
 type FormFieldType = {
   placeholder: string;
-  handleChange: (str: string | ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    str: string | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   labelName?: string;
   className?: string;
   textAreaRow?: number;
   value?: any;
   inputType?: string;
+  isTextEditor?: boolean;
   isTextArea?: boolean;
   isLoading?: boolean;
 };
 const FormField = ({
   labelName,
   className,
+  textAreaRow,
   placeholder,
   inputType,
+  isTextEditor,
   isTextArea,
   value,
   handleChange,
@@ -29,7 +34,7 @@ const FormField = ({
     editorProps: {
       attributes: {
         class:
-          " min-h-[250px] py-[15px] sm:px-[25px] px-[15px] outline-none  b font-epilogue text-white text-[14px] placeholder:text-[#4b5264]",
+          " min-h-[250px] py-[15px] sm:px-[25px] px-[15px] outline-none font-epilogue text-white text-[14px] placeholder:text-[#4b5264]",
       },
     },
     onCreate({ editor }) {
@@ -46,12 +51,26 @@ const FormField = ({
           {labelName}
         </span>
       )}
-      {isTextArea && editor ? (
+      {isTextArea && (
+        <textarea
+          disabled={isLoading}
+          spellCheck
+          required
+          value={value}
+          onChange={handleChange}
+          rows={textAreaRow}
+          placeholder={placeholder}
+          className={`py-[15px] sm:px-[25px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[14px] placeholder:text-[#4b5264] rounded-[10px] sm:min-w-[300px] ${className}`}
+        />
+      )}
+      {isTextEditor && editor && (
         <div className="rich-text bg-transparent border-[1px] border-[#3a3a43] rounded-[10px] sm:min-w-[300px]">
           <Toolbar editor={editor} />
           <EditorContent editor={editor} />
         </div>
-      ) : (
+      )}
+
+      {!isTextEditor && !isTextArea && (
         <input
           disabled={isLoading}
           spellCheck
