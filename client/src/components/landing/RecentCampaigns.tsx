@@ -18,17 +18,24 @@ const RecentCampaigns = () => {
   const [investmentSummary, setInvestmentSummary] = useState<any>([]);
 
   const fetchCampaigns = async () => {
-    setIsLoading({ ...isLoading, campaigns: true });
+    setIsLoading((loadingState) => ({ ...loadingState, campaigns: true }));
+
     const data = await getCampaigns();
-    setCampaigns(data.splice(0, 4));
-    setIsLoading({ ...isLoading, campaigns: false });
+    setCampaigns(data.slice(0, 4));
+    setIsLoading((loadingState) => ({ ...loadingState, campaigns: false }));
   };
 
   const fetchInvestmentSummary = async () => {
-    setIsLoading({ ...isLoading, investmentSummary: true });
+    setIsLoading((loadingState) => ({
+      ...loadingState,
+      investmentSummary: true,
+    }));
     const data = await getInvestmentSummary();
     setInvestmentSummary(data);
-    setIsLoading({ ...isLoading, investmentSummary: true });
+    setIsLoading((loadingState) => ({
+      ...loadingState,
+      investmentSummary: true,
+    }));
   };
 
   useEffect(() => {
@@ -56,7 +63,7 @@ const RecentCampaigns = () => {
         Explore the Latest Tech Ventures Seeking Your Support
       </p>
       <div className="items-center md:flex justify-center md:mx-auto md:space-x-10">
-        {isLoading && (
+        {isLoading.campaigns && (
           <div className="w-full flex justify-center items-center min-h-[50vh]">
             <img
               src={loader}
@@ -65,14 +72,14 @@ const RecentCampaigns = () => {
             />
           </div>
         )}
-        {!isLoading && (
+        {!isLoading.campaigns && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="flex gap-5 flex-wrap justify-center max-w-[1024px]"
           >
             {campaigns.map((campaign) => (
-              <FundCard onClick={handleNavigate} campaign={campaign} />
+              <FundCard clickHandler={handleNavigate} campaign={campaign} />
             ))}
           </motion.div>
         )}
