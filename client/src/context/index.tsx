@@ -20,7 +20,8 @@ export type ProjectType = {
   image: string;
   amountCollected?: string;
   owner?: string;
-  pId: number;
+  ownerName?: string;
+  pId?: number;
 };
 
 export type ProjectTokenType = {
@@ -112,7 +113,7 @@ export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
   const { contract } = useContract(
-    "0x2975B01B19604fCAf76aC5f8ccDB69A9b7b6877e"
+    "0x00E31eA124d5476308fe02fA66c8d14E7034e73d"
   );
 
   const { mutateAsync: createProject } = useContractWrite(
@@ -132,6 +133,7 @@ export const StateContextProvider = ({
       const data = await createProject({
         args: [
           address,
+          project.ownerName,
           project.title,
           project.category,
           project.description,
@@ -201,6 +203,7 @@ export const StateContextProvider = ({
 
     const parsedCampaings = projects.map((project, i) => ({
       owner: project.owner,
+      ownerName: project.ownerName,
       title: project.title,
       category: project.category,
       description: project.description,
@@ -218,7 +221,7 @@ export const StateContextProvider = ({
 
   const getComments = async (pId: number) => {
     const allComments: { owner: string; text: string }[] = await contract?.call(
-      "getAllComments",
+      "getProjectComments",
       [pId]
     );
     const allinvestments = await getInvesments(pId);

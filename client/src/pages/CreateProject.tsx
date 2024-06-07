@@ -12,7 +12,7 @@ import { Button, FormField, Loader } from "../components";
 import { checkIfImage } from "../lib/utils";
 import { ProjectType, useStateContext } from "../context";
 import SelectorInput from "../components/dashboard/SelectorInput";
-type formDataType = ProjectType & { name: string };
+type formDataType = ProjectType;
 
 const projectCategories = [
   { name: "AI" },
@@ -31,8 +31,8 @@ const CreateProject = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState<formDataType>({
+    ownerName: "",
     category: "",
-    name: "",
     title: "",
     description: "",
     target: "0.5",
@@ -60,14 +60,18 @@ const CreateProject = () => {
     e.preventDefault();
     checkIfImage(form.image, async (exists) => {
       if (exists) {
-        setIsLoading(true);
-        await createProject({
-          ...form,
-          target: ethers.utils.parseUnits(form.target as string, 18),
-        });
-        const projects = await getProjects();
-        setIsLoading(false);
-        // navigate(`/dashboard/create-token/${projects.length - 1}`);
+        try {
+          setIsLoading(true);
+          await createProject({
+            ...form,
+            target: ethers.utils.parseUnits(form.target as string, 18),
+          });
+          const projects = await getProjects();
+          setIsLoading(false);
+          navigate(`/dashboard/create-token/${projects.length - 1}`);
+        } catch (error) {
+          console.log(error.message);
+        }
       } else {
         alert("provide valid image URL");
         setForm({ ...form, image: "" });
@@ -102,8 +106,8 @@ const CreateProject = () => {
             labelName="Your Name *"
             placeholder="John Doe"
             inputType="text"
-            value={form.name}
-            handleChange={(e) => handleFormFieldChange("name", e)}
+            value={form.ownerName}
+            handleChange={(e) => handleFormFieldChange("ownerName", e)}
           />
           <FormField
             labelName="Project Title *"

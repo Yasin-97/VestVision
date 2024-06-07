@@ -1,11 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { colorCollection1, colorCollection2, colorDir } from "../constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-import { colorCollection1, colorCollection2, colorDir } from "../constants";
 
 export const daysLeft = (deadline: string) => {
   const difference = new Date(deadline).getTime() - Date.now();
