@@ -7,6 +7,7 @@ import "./ITokenData.sol";
 contract CrowdFunding {
     struct Project {
         address owner;
+        string ownerName;
         string category;
         string title;
         string description;
@@ -50,6 +51,7 @@ contract CrowdFunding {
 
     function createProject(
         address _owner,
+        string memory _ownerName,
         string memory _title,
         string memory _category,
         string memory _description,
@@ -59,11 +61,12 @@ contract CrowdFunding {
     ) public returns (uint256) {
         Project storage project = projects[numberOfProjects];
         require(
-            _deadline < block.timestamp,
+            _deadline > block.timestamp,
             "The deadline should be a date in the future."
         );
 
         project.owner = _owner;
+        project.ownerName = _ownerName;
         project.title = _title;
         project.category = _category;
         project.description = _description;
