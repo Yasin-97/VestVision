@@ -31,7 +31,7 @@ const SingleComment = ({
           <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-[#808191]">
             {shortenAddress(address)}{" "}
             {isInvestor && (
-              <span className="text-[9px] text-[#4acd8d]">(Investor)</span>
+              <span className="text-[12px] text-[#4acd8d]">( Investor )</span>
             )}
           </h4>
         </div>

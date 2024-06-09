@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { loader } from "../../assets";
 
 type CommentsType = {
-  projectId: number;
+  projectId: string;
 };
 
 const Comments = ({ projectId }: CommentsType) => {
@@ -22,11 +22,13 @@ const Comments = ({ projectId }: CommentsType) => {
 
   const fetchComments = async () => {
     try {
-      setIsFetchCommentsLoading(true);
-      const allComments = await getComments(projectId);
+      if (projectId) {
+        setIsFetchCommentsLoading(true);
+        const allComments = await getComments(projectId);
 
-      setProjectComments(allComments);
-      setIsFetchCommentsLoading(false);
+        setProjectComments(allComments);
+        setIsFetchCommentsLoading(false);
+      }
     } catch (error) {
       console.log(error);
     }

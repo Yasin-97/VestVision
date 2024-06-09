@@ -16,11 +16,13 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
       </span>
       <div className=" w-full flex gap-3 lg:gap-4 p-4 lg:py-10 flex-wrap justify-between">
         {isLoading && (
-          <img
-            src={loader}
-            alt="loader"
-            className="w-[100px] h-[100px] object-contain"
-          />
+          <div className="w-full flex justify-center">
+            <img
+              src={loader}
+              alt="loader"
+              className="w-[100px] h-[100px] object-contain self-center"
+            />
+          </div>
         )}
         {!isLoading && !tokenData && (
           <p className="font-epilogue font-semibold text-[14px] leading-[22px] text-[#808191] py-4">
