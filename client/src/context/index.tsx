@@ -53,16 +53,17 @@ type contextType = {
   contract: any;
   createProject: (project: ProjectType) => Promise<void>;
   createTokenForProject: (projectToken: ProjectTokenType) => Promise<void>;
-  getUserProjects: () => Promise<ProjectType[]>;
-  getProjectTokenData: (pId: number) => Promise<ProjectTokenType | undefined>;
-  getProjects: () => Promise<ProjectType[]>;
   invest: (pId: number, amount: string) => Promise<ProjectType>;
-  getInvesments: (
-    pId: number
-  ) => Promise<{ investor: string; investment: string }[]>;
   addComment: (pId: number, text: string) => Promise<void>;
   likeProject: (pId: number) => Promise<void>;
-  getComments: (pId: number) => Promise<CommentType[]>;
+  getUserProjects: () => Promise<ProjectType[]>;
+  getProjectTokenData: (pId: string) => Promise<ProjectTokenType | undefined>;
+  getProjects: () => Promise<ProjectType[]>;
+  getSingleProject: (pId: string) => Promise<ProjectType>;
+  getInvesments: (
+    pId: string
+  ) => Promise<{ investor: string; investment: string }[]>;
+  getComments: (pId: string) => Promise<CommentType[]>;
   getNumberOfLikes: (pId: number) => Promise<string>;
   getInvestmentSummary: () => Promise<string>;
 };
@@ -107,6 +108,9 @@ const StateContext = createContext<contextType>({
   },
   getInvestmentSummary: async () => {
     throw new Error("getInvestmentSummary function not implemented");
+  },
+  getSingleProject: async (pId) => {
+    throw new Error("getSingleProject function not implemented");
   },
 });
 export const StateContextProvider = ({
@@ -200,8 +204,7 @@ export const StateContextProvider = ({
 
   const getProjects = async () => {
     const projects: ProjectType[] = await contract?.call("getProjects");
-
-    const parsedCampaings = projects.map((project, i) => ({
+    const parsedProjects = projects.map((project, i) => ({
       owner: project.owner,
       ownerName: project.ownerName,
       title: project.title,
@@ -216,9 +219,31 @@ export const StateContextProvider = ({
       pId: i,
     }));
 
-    return parsedCampaings;
+    return parsedProjects;
   };
 
+  const getSingleProject = async (pId: string) => {
+    const project = await contract?.call("getSingleProject", [0]);
+
+    if (project) {
+      const parsedProject = {
+        owner: project.owner,
+        ownerName: project.ownerName,
+        title: project.title,
+        category: project.category,
+        description: project.description,
+        target: ethers.utils.formatEther(project.target.toString()),
+        deadline: (project.deadline as BigNumber).toNumber(),
+        amountCollected: ethers.utils.formatEther(
+          (project.amountCollected as string).toString()
+        ),
+        image: project.image,
+      };
+
+      return parsedProject;
+    }
+    console.log("buy");
+  };
   const getComments = async (pId: number) => {
     const allComments: { owner: string; text: string }[] = await contract?.call(
       "getProjectComments",
@@ -253,7 +278,6 @@ export const StateContextProvider = ({
 
   const getInvestmentSummary = async () => {
     const investmentSummary = await contract?.call("getInvestmentSummary");
-    console.log("the data is here", investmentSummary);
   };
 
   const getInvesments = async (pId: number) => {
@@ -323,6 +347,7 @@ export const StateContextProvider = ({
         getInvesments,
         getUserProjects,
         getNumberOfLikes,
+        getSingleProject,
         getInvestmentSummary,
         getProjectTokenData,
         createProject: publishProject,

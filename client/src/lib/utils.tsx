@@ -7,10 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const daysLeft = (deadline: string) => {
-  const difference = new Date(deadline).getTime() - Date.now();
-  const remainingDays = difference / (1000 * 3600 * 24);
+  if (deadline) {
+    const difference = new Date(deadline).getTime() - Date.now();
+    const remainingDays = difference / (1000 * 3600 * 24);
 
-  return remainingDays.toFixed(0);
+    return remainingDays.toFixed(0);
+  }
+  return null;
 };
 
 export const calculateBarPercentage = (goal: number, raisedAmount: number) => {

@@ -4,11 +4,16 @@ import React, {
   MouseEvent,
   MouseEventHandler,
 } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectTokenType, useStateContext } from "../context";
 import { CountBox, Button, Loader, Comments } from "../components";
-import { avatarColor, calculateBarPercentage, daysLeft } from "../lib/utils";
+import {
+  avatarColor,
+  calculateBarPercentage,
+  daysLeft,
+  shortenAddress,
+} from "../lib/utils";
 import defaultImg from "../../public/images/templates-preview.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { BiSolidLike } from "react-icons/bi";
@@ -18,6 +23,8 @@ import { SiEthereum } from "react-icons/si";
 const { firstColor, secondColor, dir } = avatarColor();
 
 const ProjectDetails = () => {
+  const { projectId } = useParams();
+
   const { state } = useLocation();
   const navigate = useNavigate();
   const {
@@ -25,12 +32,14 @@ const ProjectDetails = () => {
     invest,
     getInvesments,
     getProjectTokenData,
+    getSingleProject,
     contract,
     address,
     likeProject,
   } = useStateContext();
-
+  const [projectDetail, setProjectDetail] = useState(state);
   const [isLoading, setIsLoading] = useState({
+    projectDetail: false,
     investment: false,
     likeCount: true,
     tokenData: true,
@@ -44,12 +53,12 @@ const ProjectDetails = () => {
   const [likesCount, setLikesCount] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
-  const remainingDays = daysLeft(state?.deadline);
+  const remainingDays = daysLeft(projectDetail?.deadline);
 
   const fetchInvestors = async () => {
-    setIsLoading({ ...isLoading, investors: true });
+    setIsLoading((isLoading) => ({ ...isLoading, investors: true }));
 
-    const data = await getInvesments(state.pId);
+    const data = await getInvesments(projectId as string);
     setIsLoading({ ...isLoading, investors: false });
 
     setInvestors(data);
@@ -58,21 +67,21 @@ const ProjectDetails = () => {
   const fetchTokenData = async () => {
     setIsLoading({ ...isLoading, tokenData: true });
 
-    const data = await getProjectTokenData(state.pId);
+    const data = await getProjectTokenData(projectId as string);
 
     if (data) setTokenData(data);
 
     setIsLoading({ ...isLoading, tokenData: false });
   };
   const likeProjectHandler = async () => {
-    await likeProject(state.pId);
+    await likeProject(projectDetail?.pId);
     await fetchLikesCount();
   };
 
   const fetchLikesCount = async () => {
     try {
       setIsLoading({ ...isLoading, likeCount: true });
-      const likesCount = await getNumberOfLikes(state.pId);
+      const likesCount = await getNumberOfLikes(projectDetail?.pId);
       setIsLoading({ ...isLoading, likeCount: false });
 
       setLikesCount(parseInt(likesCount));
@@ -80,6 +89,21 @@ const ProjectDetails = () => {
       console.log(error);
     }
   };
+
+  const fetchProjectDetail = async () => {
+    try {
+      setIsLoading({ ...isLoading, projectDetail: true });
+      const project = await getSingleProject(projectId as string);
+      setIsLoading({ ...isLoading, likeCount: false });
+      setProjectDetail(project);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!state) fetchProjectDetail();
+  }, [state]);
 
   useEffect(() => {
     if (contract) {
@@ -119,7 +143,7 @@ const ProjectDetails = () => {
     try {
       setIsLoading({ ...isLoading, investment: true });
 
-      await invest(state.pId, amount);
+      await invest(projectDetail.pId, amount);
 
       navigate("/");
       setIsLoading({ ...isLoading, investment: false });
@@ -136,7 +160,7 @@ const ProjectDetails = () => {
         <div className="w-full flex md:flex-row flex-col gap-8">
           <div className="flex-1 flex-col relative">
             <img
-              src={state?.image || defaultImg}
+              src={projectDetail?.image || defaultImg}
               alt="project"
               className="w-full h-[410px] object-cover rounded-xl "
             />
@@ -161,8 +185,8 @@ const ProjectDetails = () => {
                 className="absolute h-full bg-[#4acd8d]"
                 style={{
                   width: `${calculateBarPercentage(
-                    state?.target,
-                    state?.amountCollected
+                    projectDetail?.target,
+                    projectDetail?.amountCollected
                   )}%`,
                   maxWidth: "100%",
                 }}
@@ -170,12 +194,12 @@ const ProjectDetails = () => {
             </div>
           </div>
           <div className="flex md:w-[150px] w-full flex-wrap justify-center gap-8 ">
-            <CountBox title="Days Left" value={remainingDays} />
+            <CountBox title="Days Left" value={remainingDays || "-"} />
             <CountBox
-              title={`Raised of ${state?.target} `}
-              value={state?.amountCollected}
+              title={`Raised of ${projectDetail?.target || "-"} `}
+              value={projectDetail?.amountCollected || "-"}
             />
-            <CountBox title="Total Backers" value={investors.length} />
+            <CountBox title="Total Backers" value={investors.length || "-"} />
           </div>
         </div>
         <Tokenomic
@@ -187,7 +211,7 @@ const ProjectDetails = () => {
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#1DC071] pl-5">
-            {state.title}
+            {projectDetail?.title}
           </h1>
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
@@ -202,11 +226,11 @@ const ProjectDetails = () => {
                 className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer"
               ></div>
               <div>
-                <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
-                  {state?.owner}
+                <h4 className="font-epilogue font-semibold text-[16px] text-white break-all">
+                  {projectDetail?.ownerName}
                 </h4>
-                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
-                  10 Projects
+                <p className="mt-[4px] font-epilogue font-semibold text-[12px] text-[#808191]">
+                  {projectDetail?.owner}
                 </p>
               </div>
             </div>
@@ -220,7 +244,7 @@ const ProjectDetails = () => {
             <div className="mt-[20px]">
               <p
                 className="rich-text font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify"
-                dangerouslySetInnerHTML={{ __html: state?.description }}
+                dangerouslySetInnerHTML={{ __html: projectDetail?.description }}
               />
             </div>
           </div>
@@ -263,13 +287,13 @@ const ProjectDetails = () => {
               recent investors
             </h4>
 
-            <div className="mt-[20px] flex flex-col gap-4">
+            <div className="mt-[16px] flex flex-col gap-4">
               {investors.length > 0 ? (
-                investors.map((item, index) => {
+                investors.map((item) => {
                   const { dir, firstColor, secondColor } = avatarColor();
                   return (
                     <div className="flex justify-between items-center gap-4">
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 items-center">
                         <span
                           style={{
                             background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
@@ -277,10 +301,10 @@ const ProjectDetails = () => {
                           className="h-8 w-8 rounded-full"
                         />
                         <p className="font-semibold font-epilogue text-[14px] text-white leading-[26px] break-ll">
-                          {item.investor}
+                          {shortenAddress(item.investor)}
                         </p>
                       </div>
-                      <p className=" font-semibold font-epilogue text-[16px] text-white leading-[26px] break-ll">
+                      <p className=" font-semibold font-epilogue text-[14px] text-white leading-[26px] break-ll">
                         {item.investment}{" "}
                         <SiEthereum className="text-base font-thin text-[#ffd900bb] inline" />
                       </p>
@@ -296,7 +320,7 @@ const ProjectDetails = () => {
           </div>
         </div>
       </div>
-      <Comments projectId={state?.pId} />
+      <Comments projectId={projectId as string} />
     </div>
   );
 };
