@@ -47,7 +47,7 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard/project-details/:id"
+          path="/dashboard/project-details/:projectId"
           element={
             <DashboardRoute>
               <ProjectDetails />
