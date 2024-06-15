@@ -53,10 +53,7 @@ const Comments = ({ projectId }: CommentsType) => {
   return (
     <div className="flex flex-col lg:flex-row items-start gap-5 mt-20 pb-20">
       <div className="w-full p-4 flex flex-col bg-[#1c1c24] rounded-[10px] flex-[2]">
-        <p
-          onClick={fetchComments}
-          className="mb-5 font-epilogue fount-medium text-[20px] leading-[30px] text-[#808191]"
-        >
+        <p className="mb-5 font-epilogue fount-medium text-[20px] leading-[30px] text-[#808191]">
           People's thought on it
         </p>
         <div className="flex flex-col gap-1 max-h-[500px] overflow-auto">

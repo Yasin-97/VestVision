@@ -16,7 +16,7 @@ export const navlinks = [
   {
     name: "croject",
     imgUrl: createProject,
-    link: "/create-project",
+    link: "/dashboard/create-project",
   },
   {
     name: "payment",

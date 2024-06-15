@@ -36,7 +36,7 @@ const Navbar = (props: Props) => {
           title={address ? "Create a project" : "Connect"}
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
-            if (address) navigate("create-project");
+            if (address) navigate("/dashboard/create-project");
             else connect();
           }}
         />
@@ -107,7 +107,7 @@ const Navbar = (props: Props) => {
               title={address ? "Create a project" : "Connect"}
               styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
               handleClick={() => {
-                if (address) navigate("create-project");
+                if (address) navigate("/dashboard/create-project");
                 else connect();
               }}
             />
