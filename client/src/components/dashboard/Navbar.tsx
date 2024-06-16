@@ -8,7 +8,8 @@ import { navlinks } from "../../constants";
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const { address, connect } = useStateContext();
+  const { address, connect, handleSearchChange, searchquery } =
+    useStateContext();
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
@@ -17,6 +18,8 @@ const Navbar = (props: Props) => {
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
         <input
+          value={searchquery}
+          onChange={(e) => handleSearchChange(e.target.value)}
           type="text"
           placeholder="Search for Projects"
           className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"

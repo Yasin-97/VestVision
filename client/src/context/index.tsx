@@ -1,4 +1,4 @@
-import { useContext, createContext, ReactNode } from "react";
+import { useContext, createContext, ReactNode, useState } from "react";
 
 import {
   useAddress,
@@ -60,29 +60,35 @@ export type InvestmentSummaryType = {
 
 export type contextType = {
   address?: string;
+  searchquery: string;
   connect: any;
   contract: any;
+  handleSearchChange: (query: string) => void;
   createProject: (project: ProjectType) => Promise<void>;
   createTokenForProject: (projectToken: ProjectTokenType) => Promise<void>;
   invest: (pId: number, amount: string) => Promise<ProjectType>;
   addComment: (pId: number, text: string) => Promise<void>;
   likeProject: (pId: number) => Promise<void>;
-  getUserProjects: () => Promise<ProjectType[]>;
-  getProjectTokenData: (pId: string) => Promise<ProjectTokenType | undefined>;
-  getProjects: () => Promise<ProjectType[]>;
-  getSingleProject: (pId: string) => Promise<ProjectType>;
+  getUserProjects: () => Promise<ProjectType[] | undefined>;
+  getProjectTokenData: (pId: number) => Promise<ProjectTokenType | undefined>;
+  getProjects: () => Promise<ProjectType[] | undefined>;
+  getSingleProject: (pId: number) => Promise<ProjectType | undefined>;
   getInvestors: (
-    pId: string
-  ) => Promise<{ investor: string; investment: string }[]>;
-  getComments: (pId: string) => Promise<CommentType[]>;
-  getNumberOfLikes: (pId: string) => Promise<string>;
-  getInvestmentSummary: () => Promise<InvestmentSummaryType>;
+    pId: number
+  ) => Promise<{ investor: string; investment: string }[] | undefined>;
+  getComments: (pId: number) => Promise<CommentType[] | undefined>;
+  getNumberOfLikes: (pId: number) => Promise<number | undefined>;
+  getInvestmentSummary: () => Promise<InvestmentSummaryType | undefined>;
 };
 export type StateContextProviderType = { children: ReactNode };
 const StateContext = createContext<contextType>({
   address: "",
+  searchquery: "",
   connect: null,
   contract: null,
+  handleSearchChange: (query) => {
+    throw new Error("handleSearchChange function not implemented");
+  },
   createProject: async () => {
     throw new Error("createProject function not implemented");
   },
@@ -126,6 +132,12 @@ const StateContext = createContext<contextType>({
 export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
+  const [searchquery, setSearchquery] = useState("");
+
+  const handleSearchChange = (query: string) => {
+    setSearchquery(query);
+  };
+
   const { contract } = useContract(
     "0x00E31eA124d5476308fe02fA66c8d14E7034e73d"
   );
@@ -240,9 +252,9 @@ export const StateContextProvider = ({
     }
   };
 
-  const getSingleProject = async (pId: string) => {
+  const getSingleProject = async (pId: number) => {
     try {
-      const project = await contract?.call("getSingleProject", [0]);
+      const project = await contract?.call("getSingleProject", [pId]);
 
       if (project) {
         const parsedProject = {
@@ -274,21 +286,21 @@ export const StateContextProvider = ({
       const cleanComments = allComments.map((item) => {
         const { firstColor, secondColor, dir } = avatarColor();
 
-        const isInvestor = allinvestments.find(
+        const isInvestor = allinvestments?.find(
           (investment) => investment.investor === item.owner
         );
 
         return {
+          owner: item.owner,
+          text: item.text,
           isInvestor: !!isInvestor,
           firstColor,
           secondColor,
           dir,
-          owner: item.owner,
-          text: item.text,
         };
       });
 
-      return cleanComments;
+      return cleanComments as CommentType[];
     } catch (error) {
       console.log("contract call failure", error);
     }
@@ -344,7 +356,7 @@ export const StateContextProvider = ({
       };
 
       return parsedTokenData;
-    } catch (error) {
+    } catch (error: { message: string }) {
       if (error.message.includes("call revert exception")) {
         console.log("This project does not have its own token!");
       }
@@ -354,7 +366,7 @@ export const StateContextProvider = ({
   const getUserProjects = async () => {
     try {
       const allProjects = await getProjects();
-      const filteredProjects = allProjects.filter(
+      const filteredProjects = allProjects?.filter(
         (project) => project.owner === address
       );
 
@@ -398,6 +410,7 @@ export const StateContextProvider = ({
         address,
         contract,
         addComment,
+        searchquery,
         getComments,
         getProjects,
         likeProject,
@@ -405,8 +418,9 @@ export const StateContextProvider = ({
         getUserProjects,
         getNumberOfLikes,
         getSingleProject,
-        getInvestmentSummary,
+        handleSearchChange,
         getProjectTokenData,
+        getInvestmentSummary,
         createProject: publishProject,
         createTokenForProject: mintTokenForProject,
       }}
