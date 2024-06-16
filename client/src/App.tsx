@@ -3,7 +3,7 @@ import {
   ProjectDetails,
   CreateProject,
   CreateToken,
-  Home,
+  Dashboard,
   Profile,
 } from "./pages";
 import Landing from "./pages/Landing";
@@ -18,7 +18,7 @@ const App = () => {
           path="/dashboard"
           element={
             <DashboardRoute>
-              <Home />
+              <Dashboard />
             </DashboardRoute>
           }
         />
