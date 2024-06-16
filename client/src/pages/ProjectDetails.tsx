@@ -20,6 +20,7 @@ import { BiSolidLike } from "react-icons/bi";
 import confetti from "canvas-confetti";
 import Tokenomic from "../components/dashboard/Tokenomic";
 import { SiEthereum } from "react-icons/si";
+import { loader } from "../assets";
 const { firstColor, secondColor, dir } = avatarColor();
 
 const ProjectDetails = () => {
@@ -30,7 +31,7 @@ const ProjectDetails = () => {
   const {
     getNumberOfLikes,
     invest,
-    getInvesments,
+    getInvestors,
     getProjectTokenData,
     getSingleProject,
     contract,
@@ -38,53 +39,62 @@ const ProjectDetails = () => {
     likeProject,
   } = useStateContext();
   const [projectDetail, setProjectDetail] = useState(state);
-  const [isLoading, setIsLoading] = useState({
-    projectDetail: false,
-    investment: false,
-    likeCount: true,
-    tokenData: true,
-    investors: true,
-  });
+
+  const [isInvestorLoading, setIsInvestorLoading] = useState(false);
+  const [isTokenDataLoading, setIsTokenDataLoading] = useState(false);
+  const [isProjectDetailLoading, setIsProjectDetailLoading] = useState(false);
+  const [isInvestmentLoading, setIsInvestmentLoading] = useState(false);
+
   const [amount, setAmount] = useState("");
   const [tokenData, setTokenData] = useState<ProjectTokenType>();
   const [investors, setInvestors] = useState<
     { investor: string; investment: string }[]
   >([]);
-  const [likesCount, setLikesCount] = useState<number>(0);
+  const [likesCount, setLikesCount] = useState<string>("0");
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const remainingDays = daysLeft(projectDetail?.deadline);
 
   const fetchInvestors = async () => {
-    setIsLoading((isLoading) => ({ ...isLoading, investors: true }));
+    try {
+      setIsInvestorLoading(true);
 
-    const data = await getInvesments(projectId as string);
-    setIsLoading({ ...isLoading, investors: false });
+      const data = await getInvestors(projectId as string);
+      setIsInvestorLoading(false);
 
-    setInvestors(data);
+      setInvestors(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchTokenData = async () => {
-    setIsLoading({ ...isLoading, tokenData: true });
+    try {
+      setIsTokenDataLoading(true);
 
-    const data = await getProjectTokenData(projectId as string);
+      const data = await getProjectTokenData(projectId as string);
 
-    if (data) setTokenData(data);
+      if (data) setTokenData(data);
 
-    setIsLoading({ ...isLoading, tokenData: false });
+      setIsTokenDataLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const likeProjectHandler = async () => {
-    await likeProject(projectDetail?.pId);
-    await fetchLikesCount();
+    try {
+      await likeProject(projectDetail?.pId);
+      await fetchLikesCount();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchLikesCount = async () => {
     try {
-      setIsLoading({ ...isLoading, likeCount: true });
       const likesCount = await getNumberOfLikes(projectDetail?.pId);
-      setIsLoading({ ...isLoading, likeCount: false });
 
-      setLikesCount(parseInt(likesCount));
+      setLikesCount(likesCount);
     } catch (error) {
       console.log(error);
     }
@@ -92,9 +102,9 @@ const ProjectDetails = () => {
 
   const fetchProjectDetail = async () => {
     try {
-      setIsLoading({ ...isLoading, projectDetail: true });
+      setIsProjectDetailLoading(true);
       const project = await getSingleProject(projectId as string);
-      setIsLoading({ ...isLoading, likeCount: false });
+      setIsProjectDetailLoading(false);
       setProjectDetail(project);
     } catch (error) {
       console.log(error);
@@ -121,6 +131,12 @@ const ProjectDetails = () => {
     }
   }, [contract, address]);
 
+  useEffect(() => {
+    if (contract) {
+      fetchLikesCount();
+    }
+  }, [contract, address]);
+
   const handleConfetti: MouseEventHandler<SVGElement> = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const origin = {
@@ -141,20 +157,21 @@ const ProjectDetails = () => {
   const handleInvestment = async () => {
     if (!address) return alert("Please connect your Metamask wallet.");
     try {
-      setIsLoading({ ...isLoading, investment: true });
+      setIsInvestmentLoading(true);
 
       await invest(projectDetail.pId, amount);
 
       navigate("/");
-      setIsLoading({ ...isLoading, investment: false });
+      setIsInvestmentLoading(false);
     } catch (error) {
-      setIsLoading({ ...isLoading, investment: false });
+      setIsInvestmentLoading(false);
     }
   };
+  console.log("the investors", isInvestorLoading, investors.length);
 
   return (
     <div>
-      {isLoading.investment && <Loader />}
+      {isInvestmentLoading && <Loader />}
 
       <div className="w-full flex  flex-col mt-10 gap-8">
         <div className="w-full flex md:flex-row flex-col gap-8">
@@ -203,52 +220,68 @@ const ProjectDetails = () => {
           </div>
         </div>
         <Tokenomic
-          isLoading={isLoading.tokenData}
+          isLoading={isTokenDataLoading}
           tokenData={tokenData as ProjectTokenType}
         />
       </div>
 
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
-        <div className="flex-[2] flex flex-col gap-[40px]">
-          <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#1DC071] pl-5">
-            {projectDetail?.title}
-          </h1>
-          <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
-              Creator
-            </h4>
-
-            <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
-              <div
-                style={{
-                  background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
-                }}
-                className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer"
-              ></div>
-              <div>
-                <h4 className="font-epilogue font-semibold text-[16px] text-white break-all">
-                  {projectDetail?.ownerName}
-                </h4>
-                <p className="mt-[4px] font-epilogue font-semibold text-[12px] text-[#808191]">
-                  {projectDetail?.owner}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
-              White Paper
-            </h4>
-
-            <div className="mt-[20px]">
-              <p
-                className="rich-text font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify"
-                dangerouslySetInnerHTML={{ __html: projectDetail?.description }}
+        {isTokenDataLoading && (
+          <div className="flex-[2]">
+            <div className="w-full flex justify-center items-center mt-4 h-full">
+              <img
+                src={loader}
+                alt="loader"
+                className="w-[100px] h-[100px] object-contain"
               />
             </div>
           </div>
-        </div>
+        )}
+
+        {!isTokenDataLoading && (
+          <div className="flex-[2] flex flex-col gap-[40px]">
+            <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#1DC071] pl-5">
+              {projectDetail?.title}
+            </h1>
+            <div>
+              <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
+                Creator
+              </h4>
+
+              <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
+                <div
+                  style={{
+                    background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
+                  }}
+                  className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer"
+                ></div>
+                <div>
+                  <h4 className="font-epilogue font-semibold text-[16px] text-white break-all">
+                    {projectDetail?.ownerName}
+                  </h4>
+                  <p className="mt-[4px] font-epilogue font-semibold text-[12px] text-[#808191]">
+                    {projectDetail?.owner}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
+                White Paper
+              </h4>
+
+              <div className="mt-[20px]">
+                <p
+                  className="rich-text font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify"
+                  dangerouslySetInnerHTML={{
+                    __html: projectDetail?.description,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
         <div className="gap-10 self-start flex-1 mt-[20px] md:mt-0 flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
           <div>
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] lg:text-center text-[#808191]">
@@ -286,9 +319,18 @@ const ProjectDetails = () => {
             <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
               recent investors
             </h4>
-
+            {isInvestorLoading && (
+              <div className="w-full flex justify-center items-center mt-4">
+                <img
+                  src={loader}
+                  alt="loader"
+                  className="w-[40px] h-[40px] object-contain"
+                />
+              </div>
+            )}
             <div className="mt-[16px] flex flex-col gap-4">
-              {investors.length > 0 ? (
+              {!isInvestorLoading &&
+                investors.length > 0 &&
                 investors.map((item) => {
                   const { dir, firstColor, secondColor } = avatarColor();
                   return (
@@ -310,8 +352,8 @@ const ProjectDetails = () => {
                       </p>
                     </div>
                   );
-                })
-              ) : (
+                })}
+              {!isInvestorLoading && !investors.length && (
                 <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">
                   No investors yet. Be the first one!
                 </p>
