@@ -1,45 +1,25 @@
-import {
-  createProject,
-  dashboard,
-  logout,
-  payment,
-  profile,
-  withdraw,
-} from "../assets";
+import { createProject, dashboard, logout, profile } from "../assets";
 
 export const navlinks = [
   {
-    name: "dashboard",
+    name: "Dashboard",
     imgUrl: dashboard,
-    link: "/",
+    link: "/dashboard",
   },
   {
-    name: "croject",
+    name: "Create Project",
     imgUrl: createProject,
     link: "/dashboard/create-project",
   },
   {
-    name: "payment",
-    imgUrl: payment,
-    link: "/",
-    disabled: true,
-  },
-  {
-    name: "withdraw",
-    imgUrl: withdraw,
-    link: "/",
-    disabled: true,
-  },
-  {
-    name: "profile",
+    name: "Profile",
     imgUrl: profile,
     link: "/dashboard/profile",
   },
   {
-    name: "logout",
+    name: "Logout",
     imgUrl: logout,
     link: "/",
-    disabled: true,
   },
 ];
 

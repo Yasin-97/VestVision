@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../../context";
 import { Button } from "..";
-import { logo, menu, search, thirdweb } from "../../assets";
+import { logo, menu, search } from "../../assets";
 import { navlinks } from "../../constants";
 
 type Props = {};
@@ -40,16 +40,6 @@ const Navbar = (props: Props) => {
             else connect();
           }}
         />
-
-        <Link to="/dashboard/profile">
-          <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
-            <img
-              src={thirdweb}
-              alt="user"
-              className="w-[60%] h-[60%] object-contain"
-            />
-          </div>
-        </Link>
       </div>
       <div className="sm:hidden flex justify-between items-center relative">
         <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
@@ -57,6 +47,10 @@ const Navbar = (props: Props) => {
             src={logo}
             alt="user"
             className="w-[60%] h-[60%] object-contain"
+            onClick={() => {
+              navigate("/dashboard");
+              setToggleDrawer(false);
+            }}
           />
         </div>
 
@@ -107,8 +101,10 @@ const Navbar = (props: Props) => {
               title={address ? "Create a project" : "Connect"}
               styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
               handleClick={() => {
-                if (address) navigate("/dashboard/create-project");
-                else connect();
+                if (address) {
+                  navigate("/dashboard/create-project");
+                  setToggleDrawer(false);
+                } else connect();
               }}
             />
           </div>

@@ -43,7 +43,7 @@ const LandingNavbar = ({
   return (
     <div className="p-6 md:p-10 flex items-center justify-between z-50">
       <div>
-        <Link to={"/"} className="cursor-pointer">
+        <Link to={"/dashboard"} className="cursor-pointer">
           <img
             src={logo}
             alt="Logo"
@@ -76,8 +76,11 @@ const LandingNavbar = ({
 
       <div className="flex md:hidden">
         {isDropDownVisible ? (
-          <div className="w-8 h-8 text-slate-300 cursor-pointer">
-            <X onClick={closeDropDown} />
+          <>
+            <X
+              className="w-8 h-8 text-slate-300 cursor-pointer"
+              onClick={closeDropDown}
+            />
             <DropDownMenu
               scrollToHome={scrollToHome}
               scrollToRecentProjects={scrollToRecentProjects}
@@ -85,7 +88,7 @@ const LandingNavbar = ({
               scrollToFAQ={scrollToFAQ}
               onClose={closeDropDown}
             />
-          </div>
+          </>
         ) : (
           <AlignJustify
             onClick={toggleDropDown}
