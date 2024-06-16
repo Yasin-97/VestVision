@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
+import { shortenAddress } from "@thirdweb-dev/react";
+import { recentInvestmentsType } from "../../context";
 
 export const InfiniteCards = ({
   items,
@@ -8,11 +10,7 @@ export const InfiniteCards = ({
   pauseOnHover = true,
   className,
 }: {
-  items: {
-    quote: string;
-    name?: string;
-    title?: string;
-  }[];
+  items?: recentInvestmentsType[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
   pauseOnHover?: boolean;
@@ -83,13 +81,13 @@ export const InfiniteCards = ({
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
-        {items.map((item, idx) => (
-          <li key={item.name}>
+        {items?.map((item, idx) => (
+          <li key={item.investor}>
             <blockquote>
               <div aria-hidden="true"></div>
               <p className=" text-sm text-white mt-5 rounded-xl border-2 border-[#28282e] py-2 px-4 font-semibold">
                 <span className="font-semibold text-[#808191]">
-                  @sdfs...215616
+                  @{shortenAddress(item.investor)}
                 </span>{" "}
                 <span
                   className="
@@ -98,10 +96,10 @@ export const InfiniteCards = ({
                   Invested
                 </span>
                 <span className="font-semibold px-1 py-[2px] bg-[#1c1c24] mr-2 rounded">
-                  0.3 eth
+                  {item.amount} eth
                 </span>
                 <span className="text-[#ffd900bb] pr-1">In</span>
-                The Launchpad for Technological Renaissance
+                {item.title}
               </p>
             </blockquote>
           </li>

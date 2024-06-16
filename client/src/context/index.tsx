@@ -46,8 +46,19 @@ export type CommentType = {
   secondColor: string;
   dir: string;
 };
+export type recentInvestmentsType = {
+  amount: string;
+  title: string;
+  investor: string;
+};
+export type InvestmentSummaryType = {
+  amountOfInvestments: string;
+  numberOfInvestors: number;
+  numberOfProjects: number;
+  recentInvestments: recentInvestmentsType[];
+};
 
-type contextType = {
+export type contextType = {
   address?: string;
   connect: any;
   contract: any;
@@ -60,15 +71,14 @@ type contextType = {
   getProjectTokenData: (pId: string) => Promise<ProjectTokenType | undefined>;
   getProjects: () => Promise<ProjectType[]>;
   getSingleProject: (pId: string) => Promise<ProjectType>;
-  getInvesments: (
+  getInvestors: (
     pId: string
   ) => Promise<{ investor: string; investment: string }[]>;
   getComments: (pId: string) => Promise<CommentType[]>;
-  getNumberOfLikes: (pId: number) => Promise<string>;
-  getInvestmentSummary: () => Promise<string>;
+  getNumberOfLikes: (pId: string) => Promise<string>;
+  getInvestmentSummary: () => Promise<InvestmentSummaryType>;
 };
-type StateContextProviderType = { children: ReactNode };
-
+export type StateContextProviderType = { children: ReactNode };
 const StateContext = createContext<contextType>({
   address: "",
   connect: null,
@@ -91,8 +101,8 @@ const StateContext = createContext<contextType>({
   invest: async (pId, amount) => {
     throw new Error("invest function not implemented");
   },
-  getInvesments: async (pId) => {
-    throw new Error("getInvesments function not implemented");
+  getInvestors: async (pId) => {
+    throw new Error("getInvestors function not implemented");
   },
   addComment: async (pId, text) => {
     throw new Error("addComment function not implemented");
@@ -242,14 +252,13 @@ export const StateContextProvider = ({
 
       return parsedProject;
     }
-    console.log("buy");
   };
   const getComments = async (pId: number) => {
     const allComments: { owner: string; text: string }[] = await contract?.call(
       "getProjectComments",
       [pId]
     );
-    const allinvestments = await getInvesments(pId);
+    const allinvestments = await getInvestors(pId);
 
     const cleanComments = allComments.map((item) => {
       const { firstColor, secondColor, dir } = avatarColor();
@@ -273,14 +282,10 @@ export const StateContextProvider = ({
 
   const getNumberOfLikes = async (pId: number) => {
     const likesCount = await contract?.call("getNumberOfLikes", [pId]);
-    return likesCount._hex;
+    return parseInt(likesCount._hex);
   };
 
-  const getInvestmentSummary = async () => {
-    const investmentSummary = await contract?.call("getInvestmentSummary");
-  };
-
-  const getInvesments = async (pId: number) => {
+  const getInvestors = async (pId: number) => {
     const investments = await contract?.call("getInvestors", [pId]);
     const numberOfInvestments = investments[0].length;
 
@@ -333,6 +338,32 @@ export const StateContextProvider = ({
     return filteredProjects;
   };
 
+  const getInvestmentSummary = async () => {
+    try {
+      const investmentSummary = await contract?.call("getInvestmentSummary");
+      if (investmentSummary) {
+        const parsedInvestments = investmentSummary[3].map(
+          (investment: any) => ({
+            amount: ethers.utils.formatEther(investment.amount._hex),
+            title: investment.title,
+            investor: investment.investor,
+          })
+        );
+        const parsedInvestmentSummary: InvestmentSummaryType = {
+          amountOfInvestments: ethers.utils.formatEther(
+            investmentSummary?.[0]?._hex
+          ),
+          numberOfInvestors: parseInt(investmentSummary?.[1]?._hex, 16),
+          numberOfProjects: parseInt(investmentSummary?.[2]?._hex, 16),
+          recentInvestments: parsedInvestments,
+        };
+        return parsedInvestmentSummary;
+      }
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -344,7 +375,7 @@ export const StateContextProvider = ({
         getComments,
         getProjects,
         likeProject,
-        getInvesments,
+        getInvestors,
         getUserProjects,
         getNumberOfLikes,
         getSingleProject,
