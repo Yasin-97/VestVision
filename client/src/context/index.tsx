@@ -186,11 +186,15 @@ export const StateContextProvider = ({
   };
 
   const invest = async (pId: number, amount: string) => {
-    const data = await contract?.call("investInProject", [pId], {
-      value: ethers.utils.parseEther(amount),
-    });
+    try {
+      const data = await contract?.call("investInProject", [pId], {
+        value: ethers.utils.parseEther(amount),
+      });
 
-    return data;
+      return data;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
   };
 
   const addComment = async (pId: number, text: string) => {
@@ -213,30 +217,9 @@ export const StateContextProvider = ({
   };
 
   const getProjects = async () => {
-    const projects: ProjectType[] = await contract?.call("getProjects");
-    const parsedProjects = projects.map((project, i) => ({
-      owner: project.owner,
-      ownerName: project.ownerName,
-      title: project.title,
-      category: project.category,
-      description: project.description,
-      target: ethers.utils.formatEther(project.target.toString()),
-      deadline: (project.deadline as BigNumber).toNumber(),
-      amountCollected: ethers.utils.formatEther(
-        (project.amountCollected as string).toString()
-      ),
-      image: project.image,
-      pId: i,
-    }));
-
-    return parsedProjects;
-  };
-
-  const getSingleProject = async (pId: string) => {
-    const project = await contract?.call("getSingleProject", [0]);
-
-    if (project) {
-      const parsedProject = {
+    try {
+      const projects: ProjectType[] = await contract?.call("getProjects");
+      const parsedProjects = projects.map((project, i) => ({
         owner: project.owner,
         ownerName: project.ownerName,
         title: project.title,
@@ -248,57 +231,96 @@ export const StateContextProvider = ({
           (project.amountCollected as string).toString()
         ),
         image: project.image,
-      };
+        pId: i,
+      }));
 
-      return parsedProject;
+      return parsedProjects;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
+  const getSingleProject = async (pId: string) => {
+    try {
+      const project = await contract?.call("getSingleProject", [0]);
+
+      if (project) {
+        const parsedProject = {
+          owner: project.owner,
+          ownerName: project.ownerName,
+          title: project.title,
+          category: project.category,
+          description: project.description,
+          target: ethers.utils.formatEther(project.target.toString()),
+          deadline: (project.deadline as BigNumber).toNumber(),
+          amountCollected: ethers.utils.formatEther(
+            (project.amountCollected as string).toString()
+          ),
+          image: project.image,
+        };
+
+        return parsedProject;
+      }
+    } catch (error) {
+      console.log("contract call failure", error);
     }
   };
   const getComments = async (pId: number) => {
-    const allComments: { owner: string; text: string }[] = await contract?.call(
-      "getProjectComments",
-      [pId]
-    );
-    const allinvestments = await getInvestors(pId);
+    try {
+      const allComments: { owner: string; text: string }[] =
+        await contract?.call("getProjectComments", [pId]);
+      const allinvestments = await getInvestors(pId);
 
-    const cleanComments = allComments.map((item) => {
-      const { firstColor, secondColor, dir } = avatarColor();
+      const cleanComments = allComments.map((item) => {
+        const { firstColor, secondColor, dir } = avatarColor();
 
-      const isInvestor = allinvestments.find(
-        (investment) => investment.investor === item.owner
-      );
+        const isInvestor = allinvestments.find(
+          (investment) => investment.investor === item.owner
+        );
 
-      return {
-        isInvestor: !!isInvestor,
-        firstColor,
-        secondColor,
-        dir,
-        owner: item.owner,
-        text: item.text,
-      };
-    });
+        return {
+          isInvestor: !!isInvestor,
+          firstColor,
+          secondColor,
+          dir,
+          owner: item.owner,
+          text: item.text,
+        };
+      });
 
-    return cleanComments;
+      return cleanComments;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
   };
 
   const getNumberOfLikes = async (pId: number) => {
-    const likesCount = await contract?.call("getNumberOfLikes", [pId]);
-    return parseInt(likesCount._hex);
+    try {
+      const likesCount = await contract?.call("getNumberOfLikes", [pId]);
+      return parseInt(likesCount._hex);
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
   };
 
   const getInvestors = async (pId: number) => {
-    const investments = await contract?.call("getInvestors", [pId]);
-    const numberOfInvestments = investments[0].length;
+    try {
+      const investments = await contract?.call("getInvestors", [pId]);
+      const numberOfInvestments = investments[0].length;
 
-    const parsedInvestments: { investor: string; investment: string }[] = [];
+      const parsedInvestments: { investor: string; investment: string }[] = [];
 
-    for (let i = 0; i < numberOfInvestments; i++) {
-      parsedInvestments.push({
-        investor: investments[0][i],
-        investment: ethers.utils.formatEther(investments[1][i].toString()),
-      });
+      for (let i = 0; i < numberOfInvestments; i++) {
+        parsedInvestments.push({
+          investor: investments[0][i],
+          investment: ethers.utils.formatEther(investments[1][i].toString()),
+        });
+      }
+
+      return parsedInvestments;
+    } catch (error) {
+      console.log("contract call failure", error);
     }
-
-    return parsedInvestments;
   };
 
   const getProjectTokenData = async (pId: number) => {
@@ -330,12 +352,16 @@ export const StateContextProvider = ({
   };
 
   const getUserProjects = async () => {
-    const allProjects = await getProjects();
-    const filteredProjects = allProjects.filter(
-      (project) => project.owner === address
-    );
+    try {
+      const allProjects = await getProjects();
+      const filteredProjects = allProjects.filter(
+        (project) => project.owner === address
+      );
 
-    return filteredProjects;
+      return filteredProjects;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
   };
 
   const getInvestmentSummary = async () => {

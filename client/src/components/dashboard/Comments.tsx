@@ -57,7 +57,7 @@ const Comments = ({ projectId }: CommentsType) => {
           People's thought on it
         </p>
         <div className="flex flex-col gap-1 max-h-[500px] overflow-auto">
-          {!isFetchCommentsLoading && !projectComments.length && (
+          {!isFetchCommentsLoading && !projectComments?.length && (
             <div className="flex flex-col items-center h-[300px] justify-center ">
               <BsFileEarmarkSpreadsheet className="text-[#808191] text-4xl mb-6" />
               <p className=" mb-5 font-epilogue fount-medium text-[16px] leading-[30px] text-[#808191]">
@@ -102,7 +102,7 @@ const Comments = ({ projectId }: CommentsType) => {
             placeholder="Your thought"
             isTextArea
             value={comment}
-            handleChange={(e) => setComment(() => e.target.value)}
+            handleChange={(e) => setComment(e.target.value)}
           />
 
           <Button
