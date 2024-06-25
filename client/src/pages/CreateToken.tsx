@@ -40,18 +40,24 @@ const CreateProject = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      form.projectId !== undefined &&
-      form.name !== "" &&
-      form.symbol !== "" &&
-      form.totalSupply > 0
-    ) {
-      setIsLoading(true);
-      await createTokenForProject(form);
+    try {
+      if (
+        form.projectId !== undefined &&
+        form.name !== "" &&
+        form.symbol !== "" &&
+        form.totalSupply > 0
+      ) {
+        setIsLoading(true);
+        await createTokenForProject(form);
+        setIsLoading(false);
+        navigate("/dashboard");
+      } else {
+        alert("provide valid image URL");
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
       setIsLoading(false);
-      navigate("/");
-    } else {
-      alert("provide valid image URL");
     }
   };
 
