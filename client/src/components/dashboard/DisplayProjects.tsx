@@ -16,12 +16,20 @@ const DisplayProjects = ({ title }: DisplayProjectType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState<ProjectType[]>([]);
 
-  const { address, contract, getUserProjects, searchquery } = useStateContext();
+  const { address, contract, getUserProjects, getProjects, searchquery } =
+    useStateContext();
 
   const fetchProjects = async () => {
     setIsLoading(true);
-    const data = await getUserProjects();
-    setProjects(data);
+    if (isProfilePage) {
+      const data = await getUserProjects();
+
+      setProjects(data);
+    } else {
+      const data = await getProjects();
+
+      setProjects(data);
+    }
     setIsLoading(false);
   };
 
@@ -35,7 +43,7 @@ const DisplayProjects = ({ title }: DisplayProjectType) => {
     });
   };
 
-  const filteredProjects = projects.filter((project) => {
+  const filteredProjects = projects?.filter((project) => {
     return project.title.toLowerCase().includes(searchquery.toLowerCase());
   });
 
