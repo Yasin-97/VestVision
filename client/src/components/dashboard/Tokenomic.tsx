@@ -1,5 +1,6 @@
 import { ProjectTokenType } from "../../context";
 import { loader } from "../../assets";
+import { formatNumber } from "../../lib/utils";
 
 type TokenomicProps = {
   isLoading: boolean;
@@ -46,7 +47,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Total Supply
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.totalSupply || "-"}
+                    {formatNumber(tokenData?.totalSupply) || "-"}
                   </span>
                 </div>
               </div>
@@ -56,7 +57,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Owner Share
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.projectOwnerShare || "-"} %
+                    {tokenData?.projectOwnerShare} %
                   </span>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -64,7 +65,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Team Share
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.teamShare || "-"} %
+                    {tokenData?.teamShare} %
                   </span>
                 </div>
               </div>
@@ -74,7 +75,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Advisor Share
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.advisorShare || "-"} %
+                    {tokenData?.advisorShare} %
                   </span>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -82,7 +83,7 @@ const Tokenomic = ({ tokenData, isLoading }: TokenomicProps) => {
                     Early Investor share
                   </span>
                   <span className="font-epilogue font-semibold text-[14px] leading-[22px] text-white text-center">
-                    {tokenData?.earlyInvestorsShare || "-"} %
+                    {tokenData?.earlyInvestorsShare} %
                   </span>
                 </div>
               </div>

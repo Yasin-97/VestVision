@@ -46,3 +46,7 @@ export const avatarColor = () => {
   const dir = colorDir[Math.floor(Math.random() * colorDir.length)];
   return { firstColor, secondColor, dir };
 };
+
+export const formatNumber = (num: number) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
