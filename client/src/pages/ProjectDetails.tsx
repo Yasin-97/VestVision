@@ -3,6 +3,7 @@ import React, {
   useEffect,
   MouseEvent,
   MouseEventHandler,
+  useMemo,
 } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -53,6 +54,19 @@ const ProjectDetails = () => {
   const [likesCount, setLikesCount] = useState<string>("0");
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
+  const investorsAvattar = useMemo(() => {
+    const investorsLength = new Array(investors.length).length;
+    let avatars: {
+      firstColor: string;
+      secondColor: string;
+      dir: string;
+    }[] = [];
+    for (let i = 0; i < investorsLength; i++) {
+      avatars = [...avatars, avatarColor()];
+    }
+    return avatars;
+  }, [investors.length]);
+
   const remainingDays = daysLeft(projectDetail?.deadline);
 
   const fetchInvestors = async () => {
@@ -83,7 +97,7 @@ const ProjectDetails = () => {
   };
   const likeProjectHandler = async () => {
     try {
-      await likeProject(projectDetail?.pId);
+      await likeProject(projectId as string);
       await fetchLikesCount();
     } catch (error) {
       console.log(error);
@@ -92,7 +106,7 @@ const ProjectDetails = () => {
 
   const fetchLikesCount = async () => {
     try {
-      const likesCount = await getNumberOfLikes(projectDetail?.pId);
+      const likesCount = await getNumberOfLikes(projectId as string);
 
       setLikesCount(likesCount);
     } catch (error) {
@@ -160,14 +174,13 @@ const ProjectDetails = () => {
       setIsInvestmentLoading(true);
 
       await invest(projectDetail.pId, amount);
-
-      navigate("/");
+      setAmount("");
+      await fetchInvestors();
       setIsInvestmentLoading(false);
     } catch (error) {
       setIsInvestmentLoading(false);
     }
   };
-  console.log("the investors", isInvestorLoading, investors.length);
 
   return (
     <div>
@@ -331,14 +344,13 @@ const ProjectDetails = () => {
             <div className="mt-[16px] flex flex-col gap-4">
               {!isInvestorLoading &&
                 investors.length > 0 &&
-                investors.map((item) => {
-                  const { dir, firstColor, secondColor } = avatarColor();
+                investors.map((item, i) => {
                   return (
                     <div className="flex justify-between items-center gap-4">
                       <div className="flex gap-2 items-center">
                         <span
                           style={{
-                            background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
+                            background: `linear-gradient(to ${investorsAvattar?.[i]?.dir}, ${investorsAvattar?.[i]?.firstColor}, ${investorsAvattar?.[i]?.secondColor})`,
                           }}
                           className="h-8 w-8 rounded-full"
                         />
