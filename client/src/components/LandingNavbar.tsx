@@ -101,7 +101,7 @@ const LandingNavbar = ({
         <Button
           btnType="button"
           title={address ? "Explore More" : "Get Connected"}
-          styles=" bg-black
+          styles=" !bg-[#13131a]
   font-semibold px-6 py-2 border border-gray-600 rounded-[8px] transition-all 
   !text-gray-400 hover:!text-gray-300 hover:border-gray-500"
           handleClick={() => {

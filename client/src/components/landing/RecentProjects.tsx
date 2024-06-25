@@ -55,7 +55,7 @@ const RecentProjects = () => {
 
   return (
     <div className=" p-4 pt-0 mx-auto relative z-10  w-full">
-      <div className="font-medium pb-8 text-4xl md:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-[#1DC071] to-sky-200 bg-opacity-50">
+      <div className="font-medium pb-8 text-4xl md:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-[#ffee32] to-sky-200 bg-opacity-50">
         Innovation Queue
       </div>
 

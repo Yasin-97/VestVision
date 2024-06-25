@@ -91,14 +91,14 @@ export const InfiniteCards = ({
                 </span>{" "}
                 <span
                   className="
-                 text-[#ffd900bb] px-1"
+                 text-blue-400 px-1"
                 >
                   Invested
                 </span>
                 <span className="font-semibold px-1 py-[2px] bg-[#1c1c24] mr-2 rounded">
                   {item.amount} eth
                 </span>
-                <span className="text-[#ffd900bb] pr-1">In</span>
+                <span className="text-blue-400 pr-1">In</span>
                 {item.title}
               </p>
             </blockquote>

@@ -34,13 +34,13 @@ const LandingStats = () => {
       </div>
     );
   return (
-    <div className="max-w-[1024px] flex flex-col sm:gap-4 md:gap-8 mx-auto border-b-8 border-l border-purple-500 rounded-bl-xl p-1 pb-4 sm:p-4 w-[90%] mt-32">
+    <div className="max-w-[1024px] flex flex-col sm:gap-4 md:gap-8 mx-auto border-b-8 border-l border-blue-500 rounded-bl-xl p-1 pb-4 sm:p-4 w-[90%] mt-32">
       <div className=" flex flex-col sm:flex-row gap-3 justify-center sm:justify-around bg-[#111]ounded-[8px] w-full ">
         <div className="flex flex-col items-center ">
           <h4 className="text-gray-200 text-2xl md:text-3xl font-semibold  ">
             {investmentSummary?.numberOfInvestors}
           </h4>
-          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
+          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-blue-500 to-sky-200 bg-opacity-50">
             # of Investors
           </p>
         </div>
@@ -49,7 +49,7 @@ const LandingStats = () => {
             {investmentSummary?.amountOfInvestments}{" "}
             <sapn className="text-base">ETH</sapn>
           </h4>
-          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
+          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-blue-500 to-sky-200 bg-opacity-50">
             Invested In Projects
           </p>
         </div>
@@ -57,7 +57,7 @@ const LandingStats = () => {
           <h4 className="text-gray-200 text-2xl md:text-3xl font-semibold  ">
             {investmentSummary?.numberOfProjects}
           </h4>
-          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-purple-500 to-sky-200 bg-opacity-50">
+          <p className="bg-clip-text text-transparent text-sm md:text-base font-bold bg-gradient-to-b from-blue-500 to-sky-200 bg-opacity-50">
             Projects
           </p>
         </div>

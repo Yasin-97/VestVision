@@ -58,7 +58,7 @@ export const HeroHighlight = ({
       <div
         className="bg-[#050505fa] absolute bottom-0 right-0 left-0"
         style={{
-          boxShadow: "#050505fa 0px -30px 60px 100px",
+          boxShadow: "#13131a 0px -30px 60px 100px",
         }}
       ></div>
     </div>

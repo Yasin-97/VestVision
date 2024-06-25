@@ -8,7 +8,7 @@ import {
 const FAQs = () => {
   return (
     <div
-      className=" mt-10 md:py-10 border-t-8 border-[#1dc0717c] w-full
+      className=" mt-10 md:py-10 border-t-8 border-[#ffee32] w-full
           rounded-3xl
           
           "
@@ -17,7 +17,7 @@ const FAQs = () => {
         <div className="text-4xl md:text-7xl font-bold md:font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to bg-white bg-opacity-50">
           Have questions?
         </div>
-        <div className="  font-semibold md:font-normal text-3xl md:text-6xl text-gradient bg-gradient-to-r from-[#1DC071] to-blue-300 bg-clip-text text-transparent">
+        <div className="  font-semibold md:font-normal text-3xl md:text-6xl text-gradient bg-gradient-to-r from-[#ffee32] to-blue-300 bg-clip-text text-transparent">
           Get answers.
         </div>
         <Accordion type="single" collapsible>

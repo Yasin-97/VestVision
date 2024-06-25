@@ -36,7 +36,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
      right-0
      z-50
      rounded-t-3xl
-     border-t-2 border-[#77D9AA]
+     border-t-2 border-[#ffee32]
     "
       initial={{ opacity: 0, y: "-80%" }}
       animate={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
           onClick={() => navItemHandler(scrollToRecentProjects)}
           className="cursor-pointer bg-clip-text text-transparent 
           bg-gradient-to-b from-neutral-50
-           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#77d9aaa8] px-2 transition-all"
+           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#ffee32be] px-2 transition-all"
         >
           Recent Projects
         </div>
@@ -57,7 +57,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
           onClick={() => navItemHandler(scrollToFeatures)}
           className="cursor-pointer bg-clip-text text-transparent 
           bg-gradient-to-b from-neutral-50
-           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#77d9aaa8] px-2 transition-all"
+           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#ffee32be] px-2 transition-all"
         >
           Features
         </div>
@@ -66,7 +66,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
           onClick={() => navItemHandler(scrollToFAQ)}
           className="cursor-pointer bg-clip-text text-transparent 
           bg-gradient-to-b from-neutral-50
-           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#77d9aaa8] px-2 transition-all"
+           to bg-neutral-400 bg-opacity-50 text-2xl hover:border-l-4 hover:border-[#ffee32be] px-2 transition-all"
         >
           FAQ
         </div>

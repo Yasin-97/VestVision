@@ -253,7 +253,7 @@ const ProjectDetails = () => {
 
         {!isTokenDataLoading && (
           <div className="flex-[2] flex flex-col gap-[40px]">
-            <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#1DC071] pl-5">
+            <h1 className="font-bold text-[25px] leading-10 text-white border-l-8 border-[#ffee32] pl-5">
               {projectDetail?.title}
             </h1>
             <div>

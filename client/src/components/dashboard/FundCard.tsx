@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { tagType, thirdweb } from "../../assets";
-import { daysLeft } from "../../lib/utils";
+import { avatarColor, daysLeft } from "../../lib/utils";
 import { ProjectType } from "../../context";
 type FundCardType = ProjectType & { handleClick: () => void };
 const FundCard = ({
@@ -16,6 +16,7 @@ const FundCard = ({
   handleClick,
 }: FundCardType) => {
   const remainingDays = daysLeft(deadline as string);
+  const { firstColor, secondColor, dir } = avatarColor();
 
   return (
     <div
@@ -71,11 +72,17 @@ const FundCard = ({
 
         <div className="flex items-center mt-[20px] gap-[12px]">
           <div className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-[#13131a]">
-            <img
+            {/* <img
               src={thirdweb}
               alt="user"
               className="w-1/2 h-1/2 object-contain"
-            />
+            /> */}
+            <div
+              style={{
+                background: `linear-gradient(to ${dir}, ${firstColor}, ${secondColor})`,
+              }}
+              className="w-1/2 h-1/2 flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer"
+            ></div>
           </div>
           <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">
             by <span className="text-[#b2b3bd]">{owner}</span>

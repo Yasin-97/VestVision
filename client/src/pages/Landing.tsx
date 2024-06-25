@@ -35,7 +35,7 @@ const Landing = (props: Props) => {
   };
 
   return (
-    <div className="bg-black/[0.98]">
+    <div className="bg-[#13131a]">
       <HeroHighlight
         containerClassName="h-screen"
         className=" antialiased bg-grid-white/[0.02]"
