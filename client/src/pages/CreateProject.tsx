@@ -35,7 +35,7 @@ const CreateProject = () => {
     category: "",
     title: "",
     description: "",
-    target: "0.5",
+    target: "",
     deadline: "",
     image: "",
   });
@@ -67,10 +67,13 @@ const CreateProject = () => {
             target: ethers.utils.parseUnits(form.target as string, 18),
           });
           const projects = await getProjects();
-          setIsLoading(false);
+
           navigate(`/dashboard/create-token/${projects.length - 1}`);
-        } catch (error) {
-          console.log(error.message);
+        } catch (error: any) {
+          if (error.message.includes("user rejected transaction"))
+            console.log("user rejected transaction");
+        } finally {
+          setIsLoading(false);
         }
       } else {
         alert("provide valid image URL");
@@ -126,14 +129,14 @@ const CreateProject = () => {
           handleChange={(e) => handleFormFieldChange("description", e)}
         />
 
-        <div className="w-full flex justify-start items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]">
+        <div className="w-full flex justify-start items-center p-4 border-2 border-[#8c6dfd] h-[120px] rounded-[10px]">
           <img
             src={money}
             alt="money"
             className="w-[40px] h-[40px] object-contain"
           />
-          <h4 className="font-epilogue font-bold text-[25px] text-white ml-[20px]">
-            You will get 100% of the raised amount
+          <h4 className="font-epilogue font-bold text-[25px] text-[#8c6dfd] ml-[20px]">
+            You’ll receive the entire raised amount.
           </h4>
         </div>
 
@@ -141,7 +144,7 @@ const CreateProject = () => {
           <FormField
             labelName="Goal *"
             placeholder="ETH 0.50"
-            inputType="text"
+            inputType="number"
             value={form.target}
             handleChange={(e) => handleFormFieldChange("target", e)}
           />
