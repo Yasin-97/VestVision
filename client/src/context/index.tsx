@@ -6,6 +6,7 @@ import {
   useMetamask,
   useContractWrite,
 } from "@thirdweb-dev/react";
+import { toast } from "react-toastify";
 
 import { BigNumber, ethers } from "ethers";
 import { avatarColor } from "../lib/utils";
@@ -66,18 +67,18 @@ export type contextType = {
   handleSearchChange: (query: string) => void;
   createProject: (project: ProjectType) => Promise<void>;
   createTokenForProject: (projectToken: ProjectTokenType) => Promise<void>;
-  invest: (pId: number, amount: string) => Promise<ProjectType>;
-  addComment: (pId: number, text: string) => Promise<void>;
-  likeProject: (pId: number) => Promise<void>;
+  invest: (pId: string, amount: string) => Promise<ProjectType>;
+  addComment: (pId: string, text: string) => Promise<void>;
+  likeProject: (pId: string) => Promise<void>;
   getUserProjects: () => Promise<ProjectType[] | undefined>;
-  getProjectTokenData: (pId: number) => Promise<ProjectTokenType | undefined>;
+  getProjectTokenData: (pId: string) => Promise<ProjectTokenType | undefined>;
   getProjects: () => Promise<ProjectType[] | undefined>;
-  getSingleProject: (pId: number) => Promise<ProjectType | undefined>;
+  getSingleProject: (pId: string) => Promise<ProjectType | undefined>;
   getInvestors: (
-    pId: number
+    pId: string
   ) => Promise<{ investor: string; investment: string }[] | undefined>;
-  getComments: (pId: number) => Promise<CommentType[] | undefined>;
-  getNumberOfLikes: (pId: number) => Promise<number | undefined>;
+  getComments: (pId: string) => Promise<CommentType[] | undefined>;
+  getNumberOfLikes: (pId: string) => Promise<number | undefined>;
   getInvestmentSummary: () => Promise<InvestmentSummaryType | undefined>;
 };
 export type StateContextProviderType = { children: ReactNode };
@@ -129,6 +130,12 @@ const StateContext = createContext<contextType>({
     throw new Error("getSingleProject function not implemented");
   },
 });
+
+const throwToast = (error: any) => {
+  if (error.message.includes("user rejected transaction")) {
+    toast.error("user rejected transaction");
+  }
+};
 export const StateContextProvider = ({
   children,
 }: StateContextProviderType) => {
@@ -170,7 +177,8 @@ export const StateContextProvider = ({
       });
       console.log("contract call success", data);
     } catch (error) {
-      console.log("contract call failure", error);
+      throwToast(error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -193,7 +201,8 @@ export const StateContextProvider = ({
       });
       console.log("contract call success", data);
     } catch (error) {
-      console.log("contract call failure", error);
+      throwToast(error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -205,7 +214,8 @@ export const StateContextProvider = ({
 
       return data;
     } catch (error) {
-      console.log("contract call failure", error);
+      throwToast(error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -215,7 +225,8 @@ export const StateContextProvider = ({
       console.log("contract call success", data);
       return data;
     } catch (error) {
-      console.log("contract call failure", error);
+      throwToast(error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -224,7 +235,8 @@ export const StateContextProvider = ({
       const data = await contract?.call("likeProject", [pId]);
       console.log("contract call success", data);
     } catch (error) {
-      console.log("contract call failure", error);
+      throwToast(error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -248,13 +260,14 @@ export const StateContextProvider = ({
 
       return parsedProjects;
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
   const getSingleProject = async (pId: number) => {
     try {
       const project = await contract?.call("getSingleProject", [pId]);
+      console.log("the project", project);
 
       if (project) {
         const parsedProject = {
@@ -274,7 +287,7 @@ export const StateContextProvider = ({
         return parsedProject;
       }
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
   const getComments = async (pId: number) => {
@@ -283,7 +296,7 @@ export const StateContextProvider = ({
         await contract?.call("getProjectComments", [pId]);
       const allinvestments = await getInvestors(pId);
 
-      const cleanComments = allComments.map((item) => {
+      const cleanComments = allComments?.map((item) => {
         const { firstColor, secondColor, dir } = avatarColor();
 
         const isInvestor = allinvestments?.find(
@@ -302,23 +315,24 @@ export const StateContextProvider = ({
 
       return cleanComments as CommentType[];
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
   const getNumberOfLikes = async (pId: number) => {
     try {
       const likesCount = await contract?.call("getNumberOfLikes", [pId]);
+
       return parseInt(likesCount._hex);
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
   const getInvestors = async (pId: number) => {
     try {
       const investments = await contract?.call("getInvestors", [pId]);
-      const numberOfInvestments = investments[0].length;
+      const numberOfInvestments = investments?.[0].length;
 
       const parsedInvestments: { investor: string; investment: string }[] = [];
 
@@ -331,7 +345,7 @@ export const StateContextProvider = ({
 
       return parsedInvestments;
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -372,7 +386,7 @@ export const StateContextProvider = ({
 
       return filteredProjects;
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
@@ -398,7 +412,7 @@ export const StateContextProvider = ({
         return parsedInvestmentSummary;
       }
     } catch (error) {
-      console.log("contract call failure", error);
+      throw new Error(`contract call failure: ${error}`);
     }
   };
 
