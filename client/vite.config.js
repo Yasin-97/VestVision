@@ -21,5 +21,12 @@ export default defineConfig({
   },
   build: {
     target: ["esnext"],
+    rollupOptions: {
+      external: [
+        "@safe-globalThis/safe-ethers-adapters",
+        "@safe-globalThis/safe-core-sdk",
+        "@safe-globalThis/safe-ethers-lib",
+      ],
+    },
   },
 });
