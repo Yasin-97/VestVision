@@ -98,7 +98,7 @@ const Navbar = (props: Props) => {
                 />
                 <p
                   className={`ml-[20px] font-epilogue font-semibold text-[14px] ${
-                    isActive === link.name ? "text-[#1dc071]" : "text-[#808191]"
+                    isActive === link.name ? "text-[#ffee32]" : "text-[#808191]"
                   }`}
                 >
                   {link.name}

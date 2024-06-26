@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { logo, sun } from "../../assets";
 import { navlinks } from "../../constants";
@@ -8,7 +8,7 @@ type IconType = {
   imgUrl: string;
   styles?: string;
   name?: string;
-  isActive?: string;
+  isActive?: boolean;
   disabled?: boolean;
   handleClick?: () => void;
 };
@@ -23,19 +23,19 @@ const Icon = ({
 }: IconType) => (
   <div
     className={`w-[48px] h-[48px] rounded-[10px] ${
-      isActive && isActive === name && "bg-[#2c2f32]"
+      isActive && "bg-[#2c2f32]"
     } flex justify-center items-center ${
       !disabled && "cursor-pointer"
     } ${styles}`}
     onClick={handleClick}
   >
-    {!isActive ? (
+    {isActive ? (
       <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
     ) : (
       <img
         src={imgUrl}
         alt="fund_logo"
-        className={`w-1/2 h-1/2 ${isActive !== name && "grayscale"}`}
+        className={`w-1/2 h-1/2 ${!isActive && "grayscale"}`}
       />
     )}
   </div>
@@ -44,11 +44,12 @@ const Icon = ({
 const Sidebar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("dashboard");
+  const { pathname } = useLocation();
 
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
       <Link to="/dashboard" onClick={() => setIsActive("Dashboard")}>
-        <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
+        <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} isActive />
       </Link>
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
         <div className="flex flex-col justify-center items-center gap-3">
@@ -56,7 +57,7 @@ const Sidebar = () => {
             <Icon
               key={link.name}
               {...link}
-              isActive={isActive}
+              isActive={pathname === link.link}
               handleClick={() => {
                 setIsActive(link.name);
                 navigate(link.link);
