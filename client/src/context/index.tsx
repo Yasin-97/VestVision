@@ -206,7 +206,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const invest = async (pId: number, amount: string) => {
+  const invest = async (pId: string, amount: string) => {
     try {
       const data = await contract?.call("investInProject", [pId], {
         value: ethers.utils.parseEther(amount),
@@ -219,7 +219,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const addComment = async (pId: number, text: string) => {
+  const addComment = async (pId: string, text: string) => {
     try {
       const data = await contract?.call("addComment", [pId, text]);
       console.log("contract call success", data);
@@ -230,7 +230,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const likeProject = async (pId: number) => {
+  const likeProject = async (pId: string) => {
     try {
       const data = await contract?.call("likeProject", [pId]);
       console.log("contract call success", data);
@@ -264,7 +264,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const getSingleProject = async (pId: number) => {
+  const getSingleProject = async (pId: string) => {
     try {
       const project = await contract?.call("getSingleProject", [pId]);
       console.log("the project", project);
@@ -290,7 +290,7 @@ export const StateContextProvider = ({
       throw new Error(`contract call failure: ${error}`);
     }
   };
-  const getComments = async (pId: number) => {
+  const getComments = async (pId: string) => {
     try {
       const allComments: { owner: string; text: string }[] =
         await contract?.call("getProjectComments", [pId]);
@@ -319,7 +319,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const getNumberOfLikes = async (pId: number) => {
+  const getNumberOfLikes = async (pId: string) => {
     try {
       const likesCount = await contract?.call("getNumberOfLikes", [pId]);
 
@@ -329,7 +329,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const getInvestors = async (pId: number) => {
+  const getInvestors = async (pId: string) => {
     try {
       const investments = await contract?.call("getInvestors", [pId]);
       const numberOfInvestments = investments?.[0].length;
@@ -349,7 +349,7 @@ export const StateContextProvider = ({
     }
   };
 
-  const getProjectTokenData = async (pId: number) => {
+  const getProjectTokenData = async (pId: string) => {
     try {
       const rawTokenData = await contract?.call("getProjectTokenData", [pId]);
 
@@ -370,7 +370,7 @@ export const StateContextProvider = ({
       };
 
       return parsedTokenData;
-    } catch (error: { message: string }) {
+    } catch (error: any) {
       if (error.message.includes("call revert exception")) {
         console.log("This project does not have its own token!");
       }
