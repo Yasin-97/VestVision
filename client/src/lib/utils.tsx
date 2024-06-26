@@ -50,3 +50,11 @@ export const avatarColor = () => {
 export const formatNumber = (num: number) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const paddNumber = (digit: number) => {
+  let stringDigit = String(digit);
+  while (stringDigit.length < 13) {
+    stringDigit = stringDigit + "0";
+  }
+  return Number(stringDigit);
+};

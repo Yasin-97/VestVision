@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 import { BigNumber, ethers } from "ethers";
-import { avatarColor } from "../lib/utils";
+import { avatarColor, paddNumber } from "../lib/utils";
 
 export type ProjectType = {
   category: string;
@@ -250,7 +250,7 @@ export const StateContextProvider = ({
         category: project.category,
         description: project.description,
         target: ethers.utils.formatEther(project.target.toString()),
-        deadline: (project.deadline as BigNumber).toNumber(),
+        deadline: paddNumber((project.deadline as BigNumber).toNumber()),
         amountCollected: ethers.utils.formatEther(
           (project.amountCollected as string).toString()
         ),
