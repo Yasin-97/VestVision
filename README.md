@@ -24,7 +24,7 @@ To contribute to VestVision, follow these steps to set up your development envir
 
 1. **Fork, Clone and Setup**: Start by forking the repository using the `Fork` button on GitHub. Then, clone and setup locally:
    ```bash
-   git clone [https://github.com/your-username/vestvision.git](https://github.com/Yasin-97/VestVision.git)
+   git clone https://github.com/Yasin-97/VestVision.git
    cd client
    npm install
    npm run dev
