@@ -1,6 +1,6 @@
 # Welcome to VestVision
 
-![VestVision Logo](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbCXcKoKJufbPpzOtLbmtNikNKQa5Yrjqm6XPWgE7Gpf8le-6VLJRFnQ7AJdCpBN8vjBMGb4GwrT3x_A9JYQcHmX3Q0A4norQQ=w1865-h966-rw-v1)
+![VestVision cover](files://C:\Users\Test\Pictures\Saved Pictures\vestbig.png)
 
 VestVision is an open-source crypto crowdfunding platform focused on funding tech startups using blockchain technology. It aims to revolutionize traditional fundraising by offering transparency, security, and global accessibility.
 ## Features
