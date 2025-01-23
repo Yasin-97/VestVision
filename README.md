@@ -1,6 +1,6 @@
 # Welcome to VestVision
 
-![VestVision cover](files://C:\Users\Test\Pictures\vestbig.png)
+![VestVision cover](./cover.png)
 
 VestVision is an open-source crypto crowdfunding platform focused on funding tech startups using blockchain technology. It aims to revolutionize traditional fundraising by offering transparency, security, and global accessibility.
 ## Features
@@ -14,17 +14,19 @@ VestVision is an open-source crypto crowdfunding platform focused on funding tec
 ## Important Packages
 
 [![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
-[![React Router](https://img.shields.io/badge/React_Router-6.4.4-blue)](https://reactrouter.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-blue)](https://tailwindcss.com/)
-[![Ethers.js](https://img.shields.io/badge/Ethers.js-5.7.2-blue)](https://docs.ethers.io/v5/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.2.6-blue)](https://www.framer.com/motion/)
+[![React Router](https://img.shields.io/badge/React_Router-6.4.4-cyan)](https://reactrouter.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.3-red)](https://tailwindcss.com/)
+[![Ethers.js](https://img.shields.io/badge/Ethers.js-5.7.2-purple)](https://docs.ethers.io/v5/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.2.6-brown)](https://www.framer.com/motion/)
+[![Hardhat](https://img.shields.io/badge/Hardhat-2.13.0-yellow)](https://hardhat.org/)
+[![Thirdweb](https://img.shields.io/badge/Thirdweb-3.8.0-green)](https://thirdweb.com/)
 
 ## How to Contribute
 To contribute to VestVision, follow these steps to set up your development environment:
 
 1. **Fork, Clone and Setup**: Start by forking the repository using the `Fork` button on GitHub. Then, clone and setup locally:
    ```bash
-   git clone https://github.com/your-username/vestvision.git
+   git clone https://github.com/Yasin-97/VestVision.git
    cd client
    npm install
    npm run dev
