@@ -132,22 +132,9 @@ const ProjectDetails = () => {
   useEffect(() => {
     if (contract) {
       fetchTokenData();
-    }
-  }, [contract, address]);
-  useEffect(() => {
-    if (contract) {
-      fetchInvestors();
-    }
-  }, [contract, address]);
-  useEffect(() => {
-    if (contract) {
       fetchTokenData();
-    }
-  }, [contract, address]);
-
-  useEffect(() => {
-    if (contract) {
       fetchLikesCount();
+      fetchInvestors();
     }
   }, [contract, address]);
 
@@ -330,7 +317,7 @@ const ProjectDetails = () => {
           </div>
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-[#808191] uppercase">
-              recent investors
+              Recent Investments
             </h4>
             {isInvestorLoading && (
               <div className="w-full flex justify-center items-center mt-4">
